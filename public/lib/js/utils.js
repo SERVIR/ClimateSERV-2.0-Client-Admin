@@ -1,0 +1,3 @@
+//utils.js
+
+var sid = "";
