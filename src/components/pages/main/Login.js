@@ -49,6 +49,7 @@ export class Login extends React.Component
                 /*eslint-disable */
                 //let current_sid = sid;
                 sid = result.data.sid;
+                setCookie("sid",sid,30);
                 /*eslint-enable */
 
             })

@@ -26,7 +26,7 @@ export class Logout extends React.Component
         //this.api__GetServerVersions();
 
         /*eslint-disable */
-        this.api__process_signin(sid);
+        this.api__process_signout(sid);
         /*eslint-enable */
     }
 
@@ -37,7 +37,7 @@ export class Logout extends React.Component
 
     // Placeholder for api__API_FUNCTION_NAME() {} // api__GetServerVersions() {}
 
-    api__process_signin(sid)
+    api__process_signout(sid)
     {
         // Call the API Service
         apiService_INSTANCE
@@ -49,10 +49,12 @@ export class Logout extends React.Component
                 //try { this.setState({ Some_State_Property: result.data, Another_State_Property: true }); } catch(err) { }
                 console.log("--- User Should be logged out of the backend now ---");
 
+
+
                 // Setting the global SID
                 /*eslint-disable */
-                //let current_sid = sid;
-                //sid = result.data.sid;
+                sid = "";
+                setCookie("sid",sid,30);
                 /*eslint-enable */
 
             })

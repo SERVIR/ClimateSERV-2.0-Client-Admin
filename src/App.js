@@ -10,7 +10,13 @@ import { Footer }               from './components/pages/Footer';
 
 
 
-function App() {
+function App() 
+{
+	/*eslint-disable */
+	let is_SID_Set = isCookieSet("sid");
+	if(is_SID_Set == true)
+    sid = getCookie("sid");
+    /*eslint-enable */
   return (
     <div className="app_container">
       <Header />

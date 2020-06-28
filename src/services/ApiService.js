@@ -90,12 +90,12 @@ const CONST__process_signout = (sid) =>
 };
 
 
-const CONST__admin_create_user = () =>
+const CONST__admin_create_user = (sid, username, firstname, lastname, email, password, password_confirm) =>
 {
     let requestURL = ROOT_API_URL + ENDPOINT__admin_create_user;
     return new Promise((resolve, reject) =>
     {
-        axios(  { method:     'post',     url:        requestURL,     data: { session_info: "" } })
+        axios(  { method:     'post',     url:        requestURL,     data: { session_info: sid, username: username, firstname: firstname, lastname: lastname, email: email, password: password, password_confirm: password_confirm } })
         .then(response =>
         {
             /*console.log("ApiService.CONST__admin_create_user: .then (response) (on next line)");*//*console.log(response);*/
@@ -122,7 +122,7 @@ class ApiService
     process_signin(username, password) 	{ return CONST__process_signin(username, password); 	}
     process_signout(sid) 				{ return CONST__process_signout(sid); 					}
     //
-    admin_create_user(PARAMS) 				{ return CONST__admin_create_user(); }
+    admin_create_user(sid, username, firstname, lastname, email, password, password_confirm)                { return CONST__admin_create_user(sid, username, firstname, lastname, email, password, password_confirm); }
 
 
 }
