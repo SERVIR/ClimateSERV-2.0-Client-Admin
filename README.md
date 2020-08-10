@@ -2,7 +2,9 @@
 
 # ClimateSERV-2.0-Client-Admin
 
-
+Node Lib installs
+npm mdbreact
+npm font-awesome
 
 
 

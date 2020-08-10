@@ -15,7 +15,13 @@ const ENDPOINT__session_output_test     = 'session_output_test/';
 const ENDPOINT__process_signin         	= 'process_signin/';
 const ENDPOINT__process_signout         = 'process_signout/';
 //
-const ENDPOINT__admin_create_user       = 'admin_create_user/';
+const ENDPOINT__admin_create_user           = 'admin_create_user/';
+const ENDPOINT__admin_get_db_item           = 'admin_get_db_item/';         // Applies to many DB types
+//
+const ENDPOINT__admin_get_api_logs          = 'admin_get_api_logs/';
+const ENDPOINT__admin_get_etl_logs          = 'admin_get_etl_logs/';
+const ENDPOINT__admin_get_server_logs       = 'admin_get_server_logs/';
+const ENDPOINT__admin_get_stats_for_type    = 'admin_get_stats_for_type/';  // Applies to many DB types
 
 
 
@@ -107,6 +113,84 @@ const CONST__admin_create_user = (sid, username, firstname, lastname, email, pas
 
 
 
+const CONST__admin_get_db_item = (sid, object_uuid, object_type) =>
+{
+    let requestURL = ROOT_API_URL + ENDPOINT__admin_get_db_item;
+    return new Promise((resolve, reject) =>
+    {
+        axios(  { method:     'post',     url:        requestURL,     data: { session_info: sid, object_uuid: object_uuid, object_type: object_type } })
+        .then(response =>
+        {
+            /*console.log("ApiService.CONST__admin_get_db_item: .then (response) (on next line)");*//*console.log(response);*/
+            if (response && response.status === 200)    {   resolve(response);  }
+            else                                        {   reject('(CONST__admin_get_db_item) Something broke...');   }
+        }).catch(error => reject(error.message));
+    });
+};
+
+
+const CONST__admin_get_api_logs = (sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only) =>
+{
+    let requestURL = ROOT_API_URL + ENDPOINT__admin_get_api_logs;
+    return new Promise((resolve, reject) =>
+    {
+        axios(  { method:     'post',     url:        requestURL,     data: { session_info: sid, page_number: page_number, items_per_page: items_per_page, search_string: search_string, endpoint_name: endpoint_name, ip_address: ip_address, errors_only: errors_only, success_only: success_only } })
+        .then(response =>
+        {
+            /*console.log("ApiService.CONST__admin_get_api_logs: .then (response) (on next line)");*//*console.log(response);*/
+            if (response && response.status === 200)    {   resolve(response);  }
+            else                                        {   reject('(CONST__admin_get_api_logs) Something broke...');   }
+        }).catch(error => reject(error.message));
+    });
+};
+
+const CONST__admin_get_etl_logs = (sid, page_number, items_per_page, search_string) =>
+{
+    let requestURL = ROOT_API_URL + ENDPOINT__admin_get_etl_logs;
+    return new Promise((resolve, reject) =>
+    {
+        axios(  { method:     'post',     url:        requestURL,     data: { session_info: sid, page_number: page_number, items_per_page: items_per_page, search_string: search_string } })
+        .then(response =>
+        {
+            /*console.log("ApiService.CONST__admin_get_etl_logs: .then (response) (on next line)");*//*console.log(response);*/
+            if (response && response.status === 200)    {   resolve(response);  }
+            else                                        {   reject('(CONST__admin_get_etl_logs) Something broke...');   }
+        }).catch(error => reject(error.message));
+    });
+};
+
+const CONST__admin_get_server_logs = (sid, page_number, items_per_page, search_string) =>
+{
+    let requestURL = ROOT_API_URL + ENDPOINT__admin_get_server_logs;
+    return new Promise((resolve, reject) =>
+    {
+        axios(  { method:     'post',     url:        requestURL,     data: { session_info: sid, page_number: page_number, items_per_page: items_per_page, search_string: search_string } })
+        .then(response =>
+        {
+            /*console.log("ApiService.CONST__admin_get_server_logs: .then (response) (on next line)");*//*console.log(response);*/
+            if (response && response.status === 200)    {   resolve(response);  }
+            else                                        {   reject('(CONST__admin_get_server_logs) Something broke...');   }
+        }).catch(error => reject(error.message));
+    });
+};
+
+
+const CONST__admin_get_stats_for_type = (sid, object_type) =>
+{
+    let requestURL = ROOT_API_URL + ENDPOINT__admin_get_server_logs;
+    return new Promise((resolve, reject) =>
+    {
+        axios(  { method:     'post',     url:        requestURL,     data: { session_info: sid, object_type: object_type } })
+        .then(response =>
+        {
+            /*console.log("ApiService.CONST__admin_get_stats_for_type: .then (response) (on next line)");*//*console.log(response);*/
+            if (response && response.status === 200)    {   resolve(response);  }
+            else                                        {   reject('(CONST__admin_get_stats_for_type) Something broke...');   }
+        }).catch(error => reject(error.message));
+    });
+};
+
+
 
 class ApiService
 {
@@ -123,8 +207,15 @@ class ApiService
     process_signout(sid) 				{ return CONST__process_signout(sid); 					}
     //
     admin_create_user(sid, username, firstname, lastname, email, password, password_confirm)                { return CONST__admin_create_user(sid, username, firstname, lastname, email, password, password_confirm); }
+    admin_get_db_item(sid, object_uuid, object_type)        { return CONST__admin_get_db_item(sid, object_uuid, object_type); }
+    //
+    admin_get_api_logs(sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only)           { return CONST__admin_get_api_logs(sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only); }
+    admin_get_etl_logs(sid, page_number, items_per_page, search_string)                                                                 { return CONST__admin_get_etl_logs(sid, page_number, items_per_page, search_string); }
+    admin_get_server_logs(sid, page_number, items_per_page, search_string)                                                              { return CONST__admin_get_server_logs(sid, page_number, items_per_page, search_string); }
+    admin_get_stats_for_type(sid, object_type)                                                                                          { return CONST__admin_get_stats_for_type(sid, object_type); }
 
-
+    // New Endpoints
+    
 }
 
 export { ApiService }

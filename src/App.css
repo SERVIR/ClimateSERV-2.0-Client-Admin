@@ -1,4 +1,8 @@
 
+
+/* Importing Font Awesome */
+/* @import url('../node_modules/font-awesome/css/font-awesome.min.css');  */
+
 /* Came with React Standard     START   */
 .App {
   text-align: center;
@@ -71,6 +75,21 @@ body { background-color: #d4ffd4; }
 
 
 .dev_header_container { background-color: #cccccc; }
+
+
+.no_border { border:none; }
+/* Makes the keys right aligned */
+.right_align_field
+{
+  display:inline-block;
+  min-width:20vw; /*140px;*/
+  text-align:right;
+}
+.col_heading
+{
+  font-weight: bold;
+  background-color: skyblue;
+}
 
 
 /* ClimateSERV 2.0 Additions    END   */

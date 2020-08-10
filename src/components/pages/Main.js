@@ -2,7 +2,8 @@
 
 //import React from 'react';
 import React, { Component }         from 'react';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route }    from 'react-router-dom';
+//import { useParams }        from "react-router";
 
 import { Home }                 from './main/Home';
 import { Login }             	from './main/Login';
@@ -18,6 +19,8 @@ import { ServerLogsSummary }    from './main/dashboard/ServerLogsSummary';
 import { ManageUsers }          from './main/ManageUsers';
 import { CreateNewUser }        from './main/manage-users/CreateNewUser';
 import { EditUserDetail }       from './main/manage-users/EditUserDetail';
+//
+import { TestDataTables }       from '../debug/TestDataTables';
 //
 import { ETLLogs }              from './main/ETLLogs';
 import { ETLLogDetail }         from './main/etl-logs/ETLLogDetail';
@@ -49,6 +52,7 @@ class Main extends Component
             ServerVersionString: "",
         };
 
+        console.log("Main.constructor was called.");
         this.api__GetServerVersions();
     }
 
@@ -106,11 +110,13 @@ class Main extends Component
                     <Route path='/main-manage-users-create-new-user' component={CreateNewUser}/>
                     <Route path='/main-manage-users-edit-user-detail' component={EditUserDetail}/>
 
+                    <Route path='/debug-test-datatables' component={TestDataTables}/>
+
                     <Route path='/main-etl-logs' component={ETLLogs}/>
                     <Route path='/main-etl-log-detail' component={ETLLogDetail}/>
 
                     <Route path='/main-api-logs' component={APILogs}/>
-                    <Route path='/main-api-log-detail' component={APILogDetail}/>
+                    <Route path='/main-api-log-detail/:uuid' component={APILogDetail}/>
                     
                     <Route path='/main-server-logs' component={ServerLogs}/>
                     <Route path='/main-server-log-detail' component={ServerLogDetail}/>

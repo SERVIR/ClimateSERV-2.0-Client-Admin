@@ -30,13 +30,17 @@ const DevHeader = () => (
 
         <br />
 
+        <li><Link to='/debug-test-datatables'>DEBUG Test Datatables</Link></li>
+
+        <br />
+
         <li><Link to='/main-etl-logs'>ETL Logs</Link></li>
         <li><Link to='/main-etl-log-detail'>ETL Log Detail</Link></li>
 
         <br />
 
         <li><Link to='/main-api-logs'>API Logs</Link></li>
-        <li><Link to='/main-api-log-detail'>API Log Detail</Link></li>
+        <li><Link to='/main-api-log-detail/3NcxCfDLbUCah2Yn8ykV'>API Log Detail (HardCoded ID: 3NcxCfDLbUCah2Yn8ykV)</Link></li>
 
         <br />
 
