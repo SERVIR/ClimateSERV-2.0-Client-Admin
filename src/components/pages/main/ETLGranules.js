@@ -1,4 +1,4 @@
-// ServerLogs.js
+// ETLGranules.js
 
 import React from "react"; 
 import { GetObjectDetailByTypeAndUUID }   from '../../../components/reusable/GetObjectDetailByTypeAndUUID';
@@ -11,14 +11,14 @@ import { MDBDataTableV5 }       from 'mdbreact';
 
 // Initialize API Service
 const apiService_INSTANCE               = new ApiService();
-const configService_INSTANCE            = new ConfigService();              // let config_object = configService_INSTANCE.get_config_object();
+const configService_INSTANCE            = new ConfigService(); 				// let config_object = configService_INSTANCE.get_config_object();
 const dataProcessingService_INSTANCE    = new DataProcessingService();
 
 // To Import THIS component into a parent, use: (Double Check the Directory path)
-// // //import { ServerLogs }   from '../ServerLogs'
+// // //import { ETLGranules }   from '../ETLGranules'
 
 // 
-export class ServerLogs extends React.Component
+export class ETLGranules extends React.Component
 {
     constructor(props) 
     {
@@ -31,7 +31,7 @@ export class ServerLogs extends React.Component
             objects_count:                          0,
             items_per_page:                         50,
             page_number:                            0,
-            objects_type:                           "Server_Log",
+            objects_type:                           "ETL_Granule",
             total_db_objects_count_for_query:       0,
             
             adv_query__last_search_string:          "",
@@ -46,7 +46,7 @@ export class ServerLogs extends React.Component
 
             detail_view_uuid:                       "",  
 
-            //ClassName: "ServerLogs",
+            //ClassName: "ETLGranules",
         };
 
         // Example of a handler getting bound (if needed)
@@ -69,7 +69,7 @@ export class ServerLogs extends React.Component
         //let LOCAL_AdvQ_ResultState_Value = "ALL"; // For the UI radio buttons only
         /*eslint-disable */
         //this.api__admin_get_etl_logs(LOCAL_IsReplace_Results, LOCAL_AdvQ_ResultState_Value, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
-        this.api__admin_get_server_logs(LOCAL_IsReplace_Results, sid, page_number, items_per_page, search_string);
+        this.api__admin_get_etl_granules(LOCAL_IsReplace_Results, sid, page_number, items_per_page, search_string);
         /*eslint-enable */
         
         // Have to do some weird bind thing or the strings inside of the click handler don't 'stick' (last item in the loop is the one that gets passed for all)
@@ -80,7 +80,7 @@ export class ServerLogs extends React.Component
 
     componentDidMount()
     {
-        let this_reference = this;
+    	let this_reference = this;
 
         // Elements to Pre-hide
         /*eslint-disable */
@@ -91,14 +91,16 @@ export class ServerLogs extends React.Component
         }, 100);
         /*eslint-enable */
 
-        //console.log("ServerLogs.componentDidMount: Reached the end!");
+        //console.log("ETLGranules.componentDidMount: Reached the end!");
     }
 
-    api__admin_get_server_logs(LOCAL_IsReplace_Results, sid, page_number, items_per_page, search_string)
+    api__admin_get_etl_granules(LOCAL_IsReplace_Results, sid, page_number, items_per_page, search_string)
     {
         // Call the API Service
+        console.log("TODO: FINISH WRITING 'admin_get_etl_granules'");
+        /*
         apiService_INSTANCE
-            .admin_get_server_logs(sid, page_number, items_per_page, search_string)
+            .admin_get_etl_granules(sid, page_number, items_per_page, search_string)
             .then(result => {
                 try 
                 { 
@@ -133,8 +135,8 @@ export class ServerLogs extends React.Component
                             //adv_query__ip_address:                  ip_address,
                             //adv_query__result_state_value:          LOCAL_AdvQ_ResultState_Value,
 
-                            //errors_only:    errors_only, 
-                            //success_only:   success_only,
+                            errors_only:    errors_only, 
+                            success_only:   success_only,
 
                             detail_view_uuid: detail_view_uuid,
                         }); 
@@ -142,35 +144,37 @@ export class ServerLogs extends React.Component
                     else
                     {
                         // Server Error
-                        //console.log("admin_get_server_logs: Error: ")
+                        //console.log("admin_get_etl_granules: Error: ")
                     }
                 } 
                 catch(err) 
                 { 
-                    //console.log("admin_get_server_logs: Error: " + err);
+                    //console.log("admin_get_etl_granules: Error: " + err);
                 }
-                //console.log("admin_get_server_logs: Results (Next Line)");
+                //console.log("admin_get_etl_granules: Results (Next Line)");
                 //console.log(result);
 
 
             })
             .catch(error =>
             {
-                console.log("ServerLogs:api__admin_get_server_logs: .catch: (error) (Next Line)");
+                console.log("ETLGranules:api__admin_get_etl_granules: .catch: (error) (Next Line)");
                 console.log(error);
             });
+        */
+        console.log("TODO: FINISH WRITING 'admin_get_etl_granules'");
     }
 
     // Gets the Config object and converts results that come from the server into something that the Datatables plugin can understand and use.
     convert_server_results_to_data_tables_data()
     {
         // dataProcessingService_INSTANCE
-        let log_table_type = "Server_Logs";
+        let log_table_type = "ETL_Granules";
         let config_object = configService_INSTANCE.get_config_object(); //"";
         let incoming_json_data = this.state.current_objects_list_from_server;
         let datatables_data = dataProcessingService_INSTANCE.convert_server_response_to_datatables_datastructure_for_logs(log_table_type, config_object, incoming_json_data); 
         
-        //console.log("ServerLogs.convert_server_results_to_data_tables_data: (datatables_data) (Next Line)");
+        //console.log("ETLGranules.convert_server_results_to_data_tables_data: (datatables_data) (Next Line)");
         //console.log(datatables_data);
         
         return datatables_data;
@@ -188,7 +192,7 @@ export class ServerLogs extends React.Component
         //console.log("handle_ID_Click: (uuid): " + uuid);
         this.setState({detail_view_uuid: uuid});
     }
-    
+
     get_all_remaining_results_from_server()
     {
 
@@ -203,8 +207,8 @@ export class ServerLogs extends React.Component
         let LOCAL_IsReplace_Results = true;
         //let LOCAL_adv_query__result_state_value   = this.state.adv_query__result_state_value;
         /*eslint-disable */
-        //this.api__admin_get_server_logs(LOCAL_IsReplace_Results, LOCAL_adv_query__result_state_value, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
-        this.api__admin_get_server_logs(LOCAL_IsReplace_Results, sid, page_number, items_per_page, search_string);
+        //this.api__admin_get_etl_granules(LOCAL_IsReplace_Results, LOCAL_adv_query__result_state_value, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
+        this.api__admin_get_etl_granules(LOCAL_IsReplace_Results, sid, page_number, items_per_page, search_string);
         /*eslint-enable */
     }
 
@@ -221,8 +225,8 @@ export class ServerLogs extends React.Component
         let LOCAL_IsReplace_Results = false;
         //let LOCAL_adv_query__result_state_value   = this.state.adv_query__result_state_value;
         /*eslint-disable */
-        //this.api__admin_get_server_logs(LOCAL_IsReplace_Results, LOCAL_adv_query__result_state_value, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
-        this.api__admin_get_server_logs(LOCAL_IsReplace_Results, sid, page_number, items_per_page, search_string);
+        //this.api__admin_get_etl_granules(LOCAL_IsReplace_Results, LOCAL_adv_query__result_state_value, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
+        this.api__admin_get_etl_granules(LOCAL_IsReplace_Results, sid, page_number, items_per_page, search_string);
         /*eslint-enable */
     }
 
@@ -251,8 +255,8 @@ export class ServerLogs extends React.Component
         //    if(result_state_group_val == "SUCCESSES_ONLY")  { success_only = true;  }
         //} catch(err) {}
         
-        //this.api__admin_get_server_logs(LOCAL_IsReplace_Results, result_state_group_val, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
-        this.api__admin_get_server_logs(LOCAL_IsReplace_Results, sid, page_number, items_per_page, search_string);
+        //this.api__admin_get_etl_granules(LOCAL_IsReplace_Results, result_state_group_val, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
+        this.api__admin_get_etl_granules(LOCAL_IsReplace_Results, sid, page_number, items_per_page, search_string);
         /*eslint-enable */
     }
 
@@ -284,7 +288,7 @@ export class ServerLogs extends React.Component
     // Definition of the Advanced Query Form
     get_AdvQueryConfig_form_html()
     {
-        // Read existing state
+    	// Read existing state
         let adv_query__last_search_string   = this.state.adv_query__last_search_string;
         //let adv_query__endpoint_name_value  = this.state.adv_query__endpoint_name_value;
         //let adv_query__ip_address           = this.state.adv_query__ip_address;
@@ -374,7 +378,7 @@ export class ServerLogs extends React.Component
             behavior: 'smooth'
         }); // 'smooth' is for animation.
     }
-
+    
     // Click the right arrow to expand a section, or the down arrow to collapse a section.
     toggle_section_expand(e, controller_element_id, target_element_id, animation_time)
     {
@@ -400,6 +404,8 @@ export class ServerLogs extends React.Component
         /*eslint-enable */   
     }
 
+
+
     render()
     {
         //console.log("Login.render: was called.");
@@ -410,19 +416,20 @@ export class ServerLogs extends React.Component
         /*eslint-enable */ 
 
         // Prep Data from the server for the Data Tables plugin, Get HTML for certain sub sections.
-        let raw_datatables_data         = this.convert_server_results_to_data_tables_data();
-        let updated_datatables_data     = this.add_click_event_handlers_to_all_rows(raw_datatables_data);
-        let server_controls_HTML        = this.get_server_controls_html();
-        let AdvQueryConfig_HTML         = this.get_AdvQueryConfig_form_html();
-        let num_of_loaded_results       = this.state.current_objects_list_from_server.length;
-        let detail_view_HTML            = this.get_DetailView_HTML();  // this.state.detail_view_uuid
+        let raw_datatables_data 		= this.convert_server_results_to_data_tables_data();
+        let updated_datatables_data 	= this.add_click_event_handlers_to_all_rows(raw_datatables_data);
+        let server_controls_HTML 		= this.get_server_controls_html();
+        let AdvQueryConfig_HTML 		= this.get_AdvQueryConfig_form_html();
+        let num_of_loaded_results 		= this.state.current_objects_list_from_server.length;
+        let detail_view_HTML 			= this.get_DetailView_HTML();  // this.state.detail_view_uuid
+
 
         let renderHTML = [];
         let keyCounter = 0;
 
         renderHTML.push(
             <div key={keyCounter} >
-                <div className="page_title_container_generic"><h3>Server Logs</h3></div>
+                <div className="page_title_container_generic"><h3>ETL Granules</h3></div>
                 <br />
                 <div className="query_instructions">Instructions: Perform a specific, server-fiiltered query by expanding the 'advanced query' area and filling out the form.  Alternatively, click a quick filter to auto-fill and execute for common queries.  Once the query is configured, you can start using the table to further filter local results.  If you wish to load all results from the server, a button for that will be visible if there are any remaining results to load.  Click the ID of a row to see detail view for any given record.</div>
                 <br />
@@ -479,7 +486,7 @@ export class ServerLogs extends React.Component
         let detail_view_uuid = this.state.detail_view_uuid;
         if(detail_view_uuid != "")
         {
-            let object_type = "ServerLog";
+            let object_type = "ETLGranule";
             let object_uuid = detail_view_uuid;
             detailView_HTML.push(
                 <div key={key_counter_internal} ref={this.detailView_Ref}>

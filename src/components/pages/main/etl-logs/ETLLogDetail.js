@@ -37,12 +37,22 @@ export class ETLLogDetail extends React.Component
     {
         //console.log("Login.render: was called.");
 
+        // Remove the back button on the pages that contain a specific div with id='hide_back_button'
+        /*eslint-disable */
+        setTimeout(function(){ check_for_back_button(); }, 50);
+        /*eslint-enable */ 
+
+        // Remove the back button on the pages that contain a specific div with id='hide_back_button'
+        /*eslint-disable */
+        setTimeout(function(){ check_for_back_button(); }, 50);
+        /*eslint-enable */ 
+
         let renderHTML = [];
         let keyCounter = 0;
 
         renderHTML.push(
             <div key={keyCounter} >
-                <h1>ETLLogDetail Page</h1>
+                <div className="page_title_container_generic"><h3>ETL Log Detail</h3></div>
             </div>
         );
         keyCounter++;

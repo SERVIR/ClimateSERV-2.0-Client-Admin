@@ -42,9 +42,11 @@ function App()
   return (
     <div className="app_container">
       <Header />
-      <DevHeader />
-      <Main />
+      <div className="cserv_main_outer_container">
+        <Main />
+      </div>
       <Footer />
+      <DevHeader />
     </div>
     
   );

@@ -52,3 +52,37 @@ function resolve(path, obj)
         return prev ? prev[curr] : null
     }, obj || self)
 }
+
+// Hide backbutton for homepage only
+function check_for_back_button()
+{
+	try
+	{
+		var is_hide_back_button = false;
+		try
+		{
+			var element = $("#hide_back_button")[0];
+			if(typeof element === "undefined") { is_hide_back_button = false; } else { is_hide_back_button = true; }
+			
+		}
+		catch(err)
+		{
+			is_hide_back_button = false;
+		}
+		if(is_hide_back_button == true)
+		{
+			$(".back_button_generic").hide();
+		}
+		else
+		{
+			$(".back_button_generic").show();
+		}
+	}
+	catch(err)
+	{
+
+	}
+	
+	
+	
+}

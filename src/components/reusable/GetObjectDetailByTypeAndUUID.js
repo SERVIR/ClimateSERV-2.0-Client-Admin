@@ -2,10 +2,14 @@
 
 import React from "react"; 
 import { ApiService } 				from '../../services/ApiService';
+import { ConfigService }            from '../../services/ConfigService';
+import { DataProcessingService }    from '../../services/DataProcessingService';
 
 
 // Initialize API Service
 const apiService_INSTANCE = new ApiService();
+const configService_INSTANCE            = new ConfigService();
+const dataProcessingService_INSTANCE    = new DataProcessingService();
 
 // To Import THIS component into a parent, use: (Double Check the Directory path)
 // // //import { GetObjectDetailByTypeAndUUID }   from '../GetObjectDetailByTypeAndUUID'
@@ -20,7 +24,7 @@ export class GetObjectDetailByTypeAndUUID extends React.Component
         {
             StateVar_Placeholder: "Placeholder",   
             //ClassName: "GetObjectDetailByTypeAndUUID",
-            JSON_Object_To_Display: {"Keys_Unset":"Vals_Unset"}, //{},
+            JSON_Object_To_Display: {"Keys_Unset":"Vals_Unset", "Error":"If you are seeing this message, it means no data has been loaded locally.  This could be caused by the server being down or an error on the server in getting the data to display."}, //{},
             JSON_Object_UUID: "",
             JSON_Object_Type: "",
         };
@@ -181,12 +185,12 @@ export class GetObjectDetailByTypeAndUUID extends React.Component
 		return ret_list;
     }
 
-    get_list_item_HTML(key, val, react_html_key_counter)
+    get_list_item_HTML(property_label, key, val, react_html_key_counter)
     {
     	var ret_HTML = [];
     	ret_HTML.push(
-    		<li className="list-group-item no_border" key={react_html_key_counter}>
-    			<strong className="right_align_field">{key}</strong>: {val}
+    		<li className="list-group-item no_border" data-property-key={key} key={react_html_key_counter}>
+    			<strong className="right_align_field">{property_label}</strong>: {val}
     		</li>
     	);
     	return ret_HTML
@@ -199,20 +203,22 @@ export class GetObjectDetailByTypeAndUUID extends React.Component
     	// index.js:1 Warning: Each child in a list should have a unique "key" prop.
     	var react_html_key_counter = 0;
 
-    	console.log("");
-    	console.log("get_prop_list_html_from_json(json_obj): ");
-    	console.log(json_obj);
-    	console.log("");
+    	//console.log("");
+    	//console.log("get_prop_list_html_from_json(json_obj): ");
+    	//console.log(json_obj);
+    	//console.log("");
 
-    	// Properties that we should ignore on the output
-    	var paths_ignore_list = [];
-    	var values_ignore_list = ['[object Object]'];
+    	// Get the list of property paths and values that we should ignore from the config object.
+        // // Properties that we should ignore on the output
+        let config_object = configService_INSTANCE.get_config_object(); //"";
+    	var paths_ignore_list  = config_object.data_item_detail_view.paths_ignore_list; // ["is_test_object"];
+    	var values_ignore_list = config_object.data_item_detail_view.values_ignore_list; // ['[object Object]'];
 
     	var ret_HTML = []; //'';
 
     	var path_key_val_list = this.get_property_path_key_val_list(json_obj);
-		console.log("get_prop_list_html_from_json: (path_key_val_list) ");
-		console.log(path_key_val_list);
+		//console.log("get_prop_list_html_from_json: (path_key_val_list) ");
+		//console.log(path_key_val_list);
 
 		var list_items_HTML = [];
 
@@ -236,10 +242,28 @@ export class GetObjectDetailByTypeAndUUID extends React.Component
 			}
 			else
 			{
+                // Check to see if there is a custom override label to use (From the config service)
+                var current_label = current__key_path;  // Default to key path (if nothing is found that overrides this, then the key path is used)
+                //let config_object = configService_INSTANCE.get_config_object(); //"";
+                try
+                {
+                    // Attempt to get the label from the config object (this code is written in such a way that if there is no config setting, nothing breaks and the key path gets used as the label), but if there is a value found for the label in the config, then that gets used.
+                    let possible_label = config_object.data_item_detail_view.prop_names_to_labels[current__key_path];
+
+                    // Make sure we did not get a null, blank or undefined value before setting the possible label to the current_label value.
+                    if(possible_label != "") { if( typeof possible_label === 'undefined' || possible_label === null ) {    } else { current_label = possible_label; } }
+
+                    
+                    //console.log(possible_label);
+                    //console.log(current_label);
+                }
+                catch(err) {}
+                
+
 				// Do NOT ignore, add this one to the list.
 				// Replace blank values with the string "<blank>"
 				if(current__value === '') { current__value = "<blank>" }
-				list_items_HTML.push(this.get_list_item_HTML( current__key_path, current__value, react_html_key_counter) );
+				list_items_HTML.push(this.get_list_item_HTML(current_label, current__key_path, current__value, react_html_key_counter) );
 				react_html_key_counter = react_html_key_counter + 1;
 			}
 
@@ -263,11 +287,9 @@ export class GetObjectDetailByTypeAndUUID extends React.Component
 		try
     	{
     		ret_HTML.push(
-    			<div className="card" key={react_html_key_counter}>
+    			<div className="card prop_path_key_val_card_container" key={react_html_key_counter}>
     			  <ul className="list-group list-group-flush ">
-    			  	<li className="list-group-item no_border" key={react_html_key_counter + 1}>
-    				  <strong className="right_align_field col_heading">Property Path</strong>: <span className="col_heading">Value</span>
-    				</li>
+    			  	{ /* <li className="list-group-item no_border" key={react_html_key_counter + 1}><strong className="right_align_field col_heading">Property Path</strong>: <span className="col_heading">Value</span></li> */ }
     				{list_items_HTML}
     			  </ul>
     		    </div>
@@ -311,6 +333,10 @@ export class GetObjectDetailByTypeAndUUID extends React.Component
     	return ret_HTML;
     }
 
+
+
+
+
     render()
     {
         //console.log("Login.render: was called.");
@@ -322,7 +348,7 @@ export class GetObjectDetailByTypeAndUUID extends React.Component
 
         renderHTML.push(
             <div key={keyCounter} >
-                <h1>GetObjectDetailByTypeAndUUID Page</h1>
+                {/* <h4>Detail View:</h4><span>{this.props.object_uuid}</span> */}
                 <div>{proplist_html}</div>
             </div>
         );
@@ -336,3 +362,7 @@ export class GetObjectDetailByTypeAndUUID extends React.Component
 
     }
 }
+
+
+// GARBAGE
+// TODO: CREATE A MAPPINGS SETTING FOR RENAMING THE PROPS FOUND HERE.<br />

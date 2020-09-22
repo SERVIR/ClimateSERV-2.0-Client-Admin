@@ -3,6 +3,7 @@
 // A kind of default / landing page - No login required here, but nothing to show either.
 
 import React, { Component }         from 'react';
+import { Link }                     from 'react-router-dom';
 import { ApiService } 				from '../../../services/ApiService';
 
 // Initialize API Service
@@ -25,6 +26,8 @@ class Home extends Component
 
     componentDidMount()
     {
+        // Scroll page to the top
+        try { window.scrollTo(0, 0); } catch(err_ScrollingToTop) { }
         //console.log("Home.componentDidMount: Reached the end!");
     }
 
@@ -50,14 +53,82 @@ class Home extends Component
 
     render()
     {
-        console.log("Home.render: was called.");
+        //console.log("Home.render: was called.");
 
+
+        // Remove the back button on the pages that contain a specific div with id='hide_back_button'
+        /*eslint-disable */
+        setTimeout(function(){ check_for_back_button(); }, 50);
+        /*eslint-enable */ 
+
+        var is_logged_in = false;
+        
+        try
+        {
+            /*eslint-disable */
+            let current_sid = sid;
+            /*eslint-enable */ 
+            // Checks to see if a user is already logged in or not (by checking if the sid variable is defined and not blank)
+            if(current_sid != "") { if( typeof current_sid === 'undefined' || current_sid === null ) { is_logged_in = false;   } else { is_logged_in = true; } }
+        }
+        catch(err)
+        {
+            is_logged_in = false;
+        }
+        console.log(is_logged_in);
+
+        
+        var keyCounter = 0;
         let renderHTML = [];
-        let keyCounter = 0;
+        let menuHTML = [];
+        if(is_logged_in == true)
+        {
+            // Show all the options (except Login)
+            menuHTML.push(
+                <div key={keyCounter} >
+                    <ul>
+                        <li><Link to='/main-dashboard'>Dashboard</Link></li>
+                        <li><Link to='/main-api-logs'>API Logs</Link></li>
+                        <li><Link to='/main-etl-logs'>ETL Logs</Link></li>
+                        <li><Link to='/main-etl-granules'>ETL Granules</Link></li>
+                        <li><Link to='/main-server-logs'>Server Logs</Link></li>
+                    </ul>
+                    <br />
+                    <ul>
+                        <li><Link to='/main-logout'>Logout</Link></li>
+                    </ul>
+                </div>
+            );
+        }
+        else
+        {
+            // Show only the Login option.
+            menuHTML.push(
+                <div key={keyCounter} >
+                    <div>You are not currently logged in.  Please Login to continue.</div>
+                    <Link to='/main-login'>Login</Link>
+                </div>
+            );
+        }
+        keyCounter = keyCounter + 1;
+        
+
+        // -Move Dev Header down to the very bottom of the entire page/site (so when it is visible, it renders below the 'normal' admin site)
+        // -Add a NASA/SERVIR logo to the top (Into the header)
+        // -Add a very simple footer (small text, to say whatever the other pages already say)
+        // -Put the login link where it should go (top right)
+        // -Put the logout link where it should go (top right, when signed in)
+        // -Put a different font up (something nice and rounded, roboto maybe?)
+        
 
         renderHTML.push(
             <div key={keyCounter} >
-                Hello World from Home.js - Welcome to ClimateSERV 2.0 Admin Site
+                {/*<br /><br />*/}
+                {/*<div className="page_title_container_generic"><h3>Home</h3></div>*/}
+                <h4>Welcome to ClimateSERV 2.0 Admin Site</h4>
+                <br />
+                {menuHTML}
+                <div id='hide_back_button'></div>
             </div>
         );
         keyCounter++;

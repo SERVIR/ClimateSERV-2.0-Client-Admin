@@ -22,7 +22,8 @@ const ENDPOINT__admin_get_api_logs          = 'admin_get_api_logs/';
 const ENDPOINT__admin_get_etl_logs          = 'admin_get_etl_logs/';
 const ENDPOINT__admin_get_server_logs       = 'admin_get_server_logs/';
 const ENDPOINT__admin_get_stats_for_type    = 'admin_get_stats_for_type/';  // Applies to many DB types
-
+//
+const ENDPOINT__admin_get_dashboard_data    = 'admin_get_dashboard_data/';
 
 
 
@@ -191,6 +192,22 @@ const CONST__admin_get_stats_for_type = (sid, object_type) =>
 };
 
 
+// admin_get_dashboard_data(sid, object_type)    { return CONST__admin_get_dashboard_data(sid); }
+const CONST__admin_get_dashboard_data = (sid) =>
+{
+    let requestURL = ROOT_API_URL + ENDPOINT__admin_get_dashboard_data;
+    return new Promise((resolve, reject) =>
+    {
+        axios(  { method:     'post',     url:        requestURL,     data: { session_info: sid } })
+        .then(response =>
+        {
+            /*console.log("ApiService.CONST__admin_get_dashboard_data: .then (response) (on next line)");*//*console.log(response);*/
+            if (response && response.status === 200)    {   resolve(response);  }
+            else                                        {   reject('(CONST__admin_get_dashboard_data) Something broke...');   }
+        }).catch(error => reject(error.message));
+    });
+};
+
 
 class ApiService
 {
@@ -212,7 +229,11 @@ class ApiService
     admin_get_api_logs(sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only)           { return CONST__admin_get_api_logs(sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only); }
     admin_get_etl_logs(sid, page_number, items_per_page, search_string)                                                                 { return CONST__admin_get_etl_logs(sid, page_number, items_per_page, search_string); }
     admin_get_server_logs(sid, page_number, items_per_page, search_string)                                                              { return CONST__admin_get_server_logs(sid, page_number, items_per_page, search_string); }
-    admin_get_stats_for_type(sid, object_type)                                                                                          { return CONST__admin_get_stats_for_type(sid, object_type); }
+    // TODO: admin_get_etl_granules (close to the way the above ones are done.)
+    admin_get_stats_for_type(sid, object_type)    { return CONST__admin_get_stats_for_type(sid, object_type); }
+    //
+    admin_get_dashboard_data(sid, object_type)    { return CONST__admin_get_dashboard_data(sid); }
+
 
     // New Endpoints
     

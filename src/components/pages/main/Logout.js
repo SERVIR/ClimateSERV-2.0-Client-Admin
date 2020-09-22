@@ -1,7 +1,8 @@
 // Logout.js
 
-import React from "react"; 
-import { ApiService } 				from '../../../services/ApiService';
+import React                from "react"; 
+import { Link }             from 'react-router-dom';
+import { ApiService } 		from '../../../services/ApiService';
 
 // Initialize API Service
 const apiService_INSTANCE = new ApiService();
@@ -26,6 +27,7 @@ export class Logout extends React.Component
         //this.api__GetServerVersions();
 
         /*eslint-disable */
+        //console.log("LOGOUT: (constructor) CALLING this.api__process_signout(sid); NOW");
         this.api__process_signout(sid);
         /*eslint-enable */
     }
@@ -45,16 +47,19 @@ export class Logout extends React.Component
             .then(result =>
             {
                 //console.log("process_signin: Results (Next Line)");
-                console.log(result);
+                //console.log(result);
                 //try { this.setState({ Some_State_Property: result.data, Another_State_Property: true }); } catch(err) { }
-                console.log("--- User Should be logged out of the backend now ---");
+                //console.log("--- User Should be logged out of the backend now ---");
 
 
 
                 // Setting the global SID
                 /*eslint-disable */
-                sid = "";
-                setCookie("sid",sid,30);
+                // It looks like we cannot directly access global vars in some contexts to set them.. must use 'window.' prefix
+                // sid = "";
+                // setCookie("sid",sid,30);
+                window.sid = "";
+                window.setCookie("sid",window.sid,30);
                 /*eslint-enable */
 
             })
@@ -70,12 +75,24 @@ export class Logout extends React.Component
     {
         //console.log("Login.render: was called.");
 
+        // Log the user out, calls the server to signout and wipes their local sid.
+        /*eslint-disable */
+        //console.log("LOGOUT: (render) CALLING this.api__process_signout(sid); NOW");
+        this.api__process_signout(sid);
+        /*eslint-enable */
+
+
         let renderHTML = [];
         let keyCounter = 0;
 
         renderHTML.push(
             <div key={keyCounter} >
-                <h1>Logout Page</h1>
+                <div>You have been logged out.</div>
+                <div>If you wish to continue, please log back in.</div>
+                <ul>
+                    <li><Link to='/'>Home</Link></li>
+                    <li><Link to='/main-login'>Login</Link></li>
+                </ul>
             </div>
         );
         keyCounter++;

@@ -1,7 +1,7 @@
 //DevHeader.js
 
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 // The DevHeader creates links that can be used to navigate
 // between routes.
@@ -36,6 +36,7 @@ const DevHeader = () => (
 
         <li><Link to='/main-etl-logs'>ETL Logs</Link></li>
         <li><Link to='/main-etl-log-detail'>ETL Log Detail</Link></li>
+        <li><Link to='/main-etl-granules'>ETL Granules</Link></li>
 
         <br />
 
@@ -46,6 +47,9 @@ const DevHeader = () => (
 
         <li><Link to='/main-server-logs'>Server Logs</Link></li>
         <li><Link to='/main-server-log-detail'>Server Log Detail</Link></li>
+
+        <br />
+
 
       </ul>
     </nav>

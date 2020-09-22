@@ -24,6 +24,7 @@ import { TestDataTables }       from '../debug/TestDataTables';
 //
 import { ETLLogs }              from './main/ETLLogs';
 import { ETLLogDetail }         from './main/etl-logs/ETLLogDetail';
+import { ETLGranules }          from './main/ETLGranules';
 //
 import { APILogs }              from './main/APILogs';
 import { APILogDetail }         from './main/api-logs/APILogDetail';
@@ -114,6 +115,7 @@ class Main extends Component
 
                     <Route path='/main-etl-logs' component={ETLLogs}/>
                     <Route path='/main-etl-log-detail' component={ETLLogDetail}/>
+                    <Route path='/main-etl-granules' component={ETLGranules}/>
 
                     <Route path='/main-api-logs' component={APILogs}/>
                     <Route path='/main-api-log-detail/:uuid' component={APILogDetail}/>

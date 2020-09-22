@@ -124,7 +124,7 @@ export class CreateNewUser extends React.Component
 
         renderHTML.push(
             <div key={keyCounter} >
-                <h1>CreateNewUser Page</h1>
+                <div className="page_title_container_generic"><h3>Create New User</h3></div>
                 <div className="generic_panel">
                     <form>
                       

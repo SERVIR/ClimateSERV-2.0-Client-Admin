@@ -42,7 +42,7 @@ export class ETLLogsSummary extends React.Component
 
         renderHTML.push(
             <div key={keyCounter} >
-                <h1>ETLLogsSummary Page</h1>
+                <div className="page_title_container_generic"><h3>ETL Logs Summary</h3></div>
             </div>
         );
         keyCounter++;

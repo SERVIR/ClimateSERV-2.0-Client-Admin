@@ -2,6 +2,7 @@
 
 import React from "react"; 
 import { ApiService } 				from '../../services/ApiService';
+import Servir_Logo                  from '../../img/Servir_Logo.png';
 
 // Initialize API Service
 const apiService_INSTANCE = new ApiService();
@@ -41,8 +42,11 @@ export class Footer extends React.Component
         let keyCounter = 0;
 
         renderHTML.push(
-            <div key={keyCounter} >
-                <h1>Footer Page</h1>
+            <div className="cserv_footer_container" key={keyCounter} >
+                <div className="cserv_footer_logo_container">
+                    <img src={Servir_Logo} alt="SERVIR_Logo" className="mx-auto d-block" />
+                    <div className="cserv_footer_text">ClimateSERV 2.0 © 2020 | SERVIR GLOBAL</div> 
+                </div>
             </div>
         );
         keyCounter++;

@@ -35,23 +35,67 @@ export class Login extends React.Component
 
     api__process_signin(username, password)
     {
+        /*eslint-disable */
+        $(".login_form_status_message_error").hide();
+        $(".login_form_status_message_success").hide();
+        /*eslint-enable */
+
         // Call the API Service
         apiService_INSTANCE
             .process_signin(username, password)
             .then(result =>
             {
+                // For Debugging (Uncomment these lines)
                 //console.log("process_signin: Results (Next Line)");
-                console.log(result);
+                //console.log(result);
+                
+                // Set State example
                 //try { this.setState({ Some_State_Property: result.data, Another_State_Property: true }); } catch(err) { }
-                console.log("FINISH DOING SOMETHING HERE!");
+                
 
-                // Setting the global SID
-                /*eslint-disable */
-                //let current_sid = sid;
-                sid = result.data.sid;
-                setCookie("sid",sid,30);
-                /*eslint-enable */
+                // Check to see if login worked or not.  Take appropriate action if login succeeded, or failed.
 
+                var status_message_error_html = ""; 
+                var status_message_success_html = "";
+                // Check to see if login failed.
+                try
+                {
+                    if(result.data.result == "error")
+                    {
+                        status_message_error_html = "Login Failed.<br />Message from Server: " + result.data.ErrorMessage;
+                    }
+                    if(result.data.result == "success")
+                    {
+                        // Login Succeded, // Setting the global SID
+                        /*eslint-disable */
+                        sid = result.data.sid;
+                        setCookie("sid",sid,30);
+                        status_message_success_html = "Login Successful.<br />Returning to the Home page.  If you are not auto forwarded, please click <a href='/'>this link</a>.";
+                        $(".login_form_status_message_success").html(status_message_success_html);
+                        $(".login_form_status_message_success").show();
+                        /*eslint-enable */
+
+                        // And then forwarding user to the 'home' page. 
+                        setTimeout(function(){ window.location = "/"; }, 3000);
+                    }
+
+                }
+                catch(err)
+                {
+                    status_message_error_html = "Login Failed.  Local JS Error: " + err;
+                }
+
+                
+                if(status_message_error_html != "")
+                {
+                    /*eslint-disable */
+                    $(".login_form_status_message_error").html(status_message_error_html);
+                    $(".login_form_status_message_error").show();
+                    /*eslint-enable */    
+                }
+                
+
+                
             })
             .catch(error =>
             {
@@ -88,7 +132,7 @@ export class Login extends React.Component
 
         renderHTML.push(
             <div key={keyCounter} className="login_container">
-                <h1>Login to ClimateSERV</h1>
+                <h3>Login to ClimateSERV</h3>
                 <div className="generic_panel">
                     <form>
                         <div className="form-group">
@@ -105,7 +149,10 @@ export class Login extends React.Component
                             Login
                         </div>
                     </form>
+                    <br />
                 </div>
+                <div className="login_form_status_message_error"></div>
+                <div className="login_form_status_message_success"></div>
             </div>
         );
         keyCounter++;

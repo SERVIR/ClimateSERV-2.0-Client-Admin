@@ -29,6 +29,9 @@ export class APILogDetail extends React.Component
 
     componentDidMount()
     {
+        // Scroll page to the top
+        try { window.scrollTo(0, 0); } catch(err_ScrollingToTop) { }
+
         //console.log("APILogDetail.componentDidMount: Reached the end!");
     }
 
@@ -36,10 +39,33 @@ export class APILogDetail extends React.Component
 
     render()
     {
-        console.log("APILogDetail.render: was called.");
-        console.log("APILogDetail.render: this.props.match.params.uuid: " + this.props.match.params.uuid);
-        let urlparam__uuid = this.props.match.params.uuid;
-        let object_uuid = urlparam__uuid;
+        try
+        {
+            console.log("APILogDetail.render: was called.");
+            console.log("APILogDetail.render: this.props.uuid: " + this.props.uuid);
+            console.log("APILogDetail.render: this.props.match.params.uuid: " + this.props.match.params.uuid);
+        }
+        catch(err) {}
+
+        var object_uuid = "";
+
+        try
+        {
+            // First try to load from an incoming URL Param prop. (URL String Path passing in the uuid)
+            let urlparam__uuid = this.props.match.params.uuid;
+            object_uuid = urlparam__uuid;
+        }
+        catch(err)
+        {
+            try
+            {
+                // Now try to load from incoming prop.
+                object_uuid = this.props.uuid;
+            }
+            catch(err) {}
+
+        }
+
         let object_type = "APILog";
         
 
@@ -48,8 +74,7 @@ export class APILogDetail extends React.Component
 
         renderHTML.push(
             <div key={keyCounter} >
-                <h1>APILogDetail Page</h1>
-                <div>TESTING THE DETAIL VIEW HERE</div>
+                <div className="page_title_container_generic"><h3>API Log Detail</h3></div>
                 <div>
                     <GetObjectDetailByTypeAndUUID object_type={object_type} object_uuid={object_uuid} />
                 </div>
