@@ -1,0 +1,88 @@
+/*!
+ * Start Bootstrap - Modern Business (https://startbootstrap.com/template-overviews/modern-business)
+ * Copyright 2013-2019 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-logomodern-business-nav/blob/master/LICENSE)
+ */
+body {
+  padding-top: 56px;
+  /*background-color: #dfe7ff;  !* #dbe4ff *!*/
+}
+
+.carousel-item {
+  height: 65vh;
+  min-height: 300px;
+  background: no-repeat center center scroll;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.portfolio-item {
+  margin-bottom: 30px;
+}
+
+
+.hr_thick_line
+{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-top: 2px solid rgba(0,0,0,.1);
+}
+
+.hr_thicker_line
+{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-top: 3px solid rgba(0,0,0,.2);
+}
+
+/* Experimental */
+.hr_thin_red_line
+{
+  border: 1px solid red;
+}
+
+
+/* Custom Additions */
+
+body
+{
+    background-color: #ffffff;      /* #dbe4ff; */
+    color: #000000;                 /* #00FFFF; */
+}
+
+.mobile_Size_Link { font-size: 1.4em; }
+.hr_ThickOrangeIsh {     border-top: 2px solid #ffcb7e8c; }
+hr {     border-top: 2px solid #ffcb7e8c; }
+.label_color_cccccc { color: #cccccc; }
+
+
+.div_clear {clear:both;}
+
+.front_page__SectionHeading {     text-align: center;  font-size: 2em;   font-weight: bold; color:black; }
+
+.color_008B00__DarkGreen { color: #008B00 }
+.color_8B0000__DarkRed { color: #8b0000 }
+
+.post_body_text {   word-break: break-all;  }
+
+
+/*  Horizontal Scroll Menu  */
+/*  https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_menu_hor_scroll   */
+div.scrollmenu      {       background-color: #333;     overflow: auto;     white-space: nowrap;    }
+div.scrollmenu a    {       display: inline-block;      color: white;       text-align: center;     padding: 14px;      text-decoration: none;      }
+.side_scrolling_menu_container {}
+
+
+
+.table
+{
+    color: #b4b4b4;
+    background-color: #363636;
+}
+
+/*
+colors
+  Background #dbe4ff
+*/
