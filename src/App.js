@@ -46,7 +46,7 @@ function App()
         <Main />
       </div>
       <Footer />
-      <DevHeader />
+      
     </div>
     
   );
@@ -54,3 +54,4 @@ function App()
 
 export default App;
 
+// <DevHeader />

@@ -284,6 +284,140 @@ export class Dashboard extends React.Component
 
     }
 
+
+    setup__Task_Logs_Section()
+    {
+        /*eslint-disable */
+
+
+        // Pie Chart
+        // task_logs__pieChart__alerts etl_logs__pieChart__alerts
+
+        // Get data from the server
+        var label_Success = "Successful Tasks";
+        var label_Error = "Errored Tasks";
+        var count_Success = 0;
+        var count_Error = 0;
+        // Try and get the first item
+        try
+        {
+            
+            var is_errored_distinct_counts = this.state.dashboard_data.Task_Log.stats_by_field.is_errored.distinct_counts;
+            for(var i = 0; i < is_errored_distinct_counts.length; i ++)
+            {
+                var current_Obj = is_errored_distinct_counts[i];
+                if(current_Obj.is_errored == "False")
+                {
+                    count_Success = current_Obj.count;
+                }
+                if(current_Obj.is_errored == "True")
+                {
+                    count_Error = current_Obj.count;
+                }
+                // Ignore the 'UNKNOWN' and other types 
+            }
+        } catch(err) {}
+
+        var ctxP = document.getElementById("task_logs__pieChart__errors_vs_success").getContext('2d');
+        var myPieChart = new Chart(ctxP, {
+            type: 'pie',
+            data: {
+                labels: [label_Error, label_Success], //["Red", "Blue"], //  "Green", "Yellow", "Grey", "Dark Grey"],
+                datasets: [
+                {
+                    data: [count_Error, count_Success], //[300, 50], // 50, 100, 40, 120],
+                    backgroundColor: ["#F7464A", "#36a2eb"], // "#46BFBD", "#FDB45C", "#949FB1", "#4D5360"],
+                    hoverBackgroundColor: ["#FF5A5E", "#47b3fc"] // "#5AD3D1", "#FFC870", "#A8B3C5", "#616774"]
+                }]
+            },
+            options: {
+                responsive: true,
+                //legend: false
+            }
+        });
+
+
+
+
+        // Bar Chat
+
+        // Prep Data From State
+        var array_sync__Dataset_0__Data_Count  = [];
+        var array_sync__Dataset_0__Data_Labels = [];
+        try
+        {
+            //var activity_event_type_distinct_counts = this.state.dashboard_data.Task_Log.stats_by_field.activity_event_type.distinct_counts;
+            var job_status_distinct_counts = this.state.dashboard_data.Task_Log.stats_by_field.job_status.distinct_counts;
+            //job_status
+            for(var i = 0; i < job_status_distinct_counts.length; i++)
+            {
+                array_sync__Dataset_0__Data_Count.push(job_status_distinct_counts[i].count);
+                array_sync__Dataset_0__Data_Labels.push(job_status_distinct_counts[i].job_status);
+            }
+        }
+        catch(err) {}
+
+        var num_of_data_items = array_sync__Dataset_0__Data_Labels.length;
+
+        // Calculate Bar Graph Colors from the number of data items (This sort of breaks if there are more than 360 - but really it would probably be hard to read if there are more than like 20 items)
+        var colors_Background = [];
+        var colors_Border = [];
+        var hue_Increments = 30; // 12 items
+        try{ hue_Increments = Math.floor(360 / num_of_data_items); }catch(err){}  // No dividing by zero
+        console.log(hue_Increments);
+        for(var i = 0; i < num_of_data_items; i++)
+        {
+            var current_Hue = hue_Increments * i;
+            var color_Background    = 'hsla('+current_Hue+', 100%, 65%, 0.4)';
+            var color_Border        = 'hsla('+current_Hue+', 100%, 65%, 1)';
+
+            colors_Background.push(color_Background);
+            colors_Border.push(color_Border);
+            // hsl(0, 100%, 65%)
+            // hsl(150, 100%, 65%)
+        }
+
+        // etl_logs__barChart__activity_event_type
+        // task_logs__barChart__activity_event_type
+        var ctx = document.getElementById("task_logs__barChart__activity_event_type").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'horizontalBar', //'horizontalBar', //'bar',
+            data: {
+                labels: array_sync__Dataset_0__Data_Labels, //HC_Labels, //["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+                datasets: [{
+                    label: 'Events Logged', //'Endpoint Hits', //'# of Votes',
+                    data: array_sync__Dataset_0__Data_Count, //HC_Data, // [12, 19, 3, 5, 2, 3],
+                    backgroundColor: colors_Background, // [ 'rgba(255, 99, 132, 0.2)', ],
+                    borderColor: colors_Border, // [ 'rgba(255,99,132,1)', ],
+                    borderWidth: 1
+                }]
+            },
+            options: 
+            {
+                legend: { display: false },
+                scales: {
+                    xAxes: [{
+                        scaleLabel: { labelString: 'Total Number of Times Logged', display: true },
+                        ticks: 
+                        {
+                            beginAtZero: true
+                        }
+                    }],
+                    yAxes: [{
+                        scaleLabel: { labelString: 'Unique Activity Event Types', display: true },
+                        ticks: 
+                        {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+
+
+        /*eslint-enable */ 
+    }    
+
     setup__ETL_Logs_Section()
     {
         // Pie Chart showing 'is_alert_dismissed' vs 'is_alert' (Total Alerts VS Alerts taht have not yet been dismissed)
@@ -296,13 +430,13 @@ export class Dashboard extends React.Component
 
         // Pie Chart
 
-        console.log("");
-        console.log("setup__ETL_Logs_Section: TODO - setup Pie Chart, and other types as needed - and HTML summary section");
-        console.log("setup__ETL_Logs_Section: TODO - setup Pie Chart, and other types as needed - and HTML summary section");
-        console.log("setup__ETL_Logs_Section: TODO - setup Pie Chart, and other types as needed - and HTML summary section");
-        console.log("setup__ETL_Logs_Section: TODO - setup Pie Chart, and other types as needed - and HTML summary section");
-        console.log("setup__ETL_Logs_Section: TODO - setup Pie Chart, and other types as needed - and HTML summary section");
-        console.log("");
+        // console.log("");
+        // console.log("setup__ETL_Logs_Section: TODO - setup Pie Chart, and other types as needed - and HTML summary section");
+        // console.log("setup__ETL_Logs_Section: TODO - setup Pie Chart, and other types as needed - and HTML summary section");
+        // console.log("setup__ETL_Logs_Section: TODO - setup Pie Chart, and other types as needed - and HTML summary section");
+        // console.log("setup__ETL_Logs_Section: TODO - setup Pie Chart, and other types as needed - and HTML summary section");
+        // console.log("setup__ETL_Logs_Section: TODO - setup Pie Chart, and other types as needed - and HTML summary section");
+        // console.log("");
         
 
 
@@ -531,10 +665,11 @@ export class Dashboard extends React.Component
             {
                 this_ref.setup__API_Logs_Section();
                 this_ref.setup__ETL_Logs_Section();
+                this_ref.setup__Task_Logs_Section();
 
-                this_ref.setup_pie_chart__TEST_VERSION(); 
-                this_ref.setup_bar_chart__TEST_VERSION(); 
-                this_ref.setup_line_chart__TEST_VERSION();
+                //this_ref.setup_pie_chart__TEST_VERSION(); 
+                //this_ref.setup_bar_chart__TEST_VERSION(); 
+                //this_ref.setup_line_chart__TEST_VERSION();
             } catch(err){}
             
         }, 200);
@@ -599,8 +734,8 @@ export class Dashboard extends React.Component
                 <div className="card-body">
                     <div>etl_logs_section_text_html</div>
                     <br />
-                    <div><Link to='/main-etl-logs'>Search and View ETL Log Details</Link></div>
-                    <canvas id="etl_logs__pieChart__alerts"></canvas>
+                    <div><Link to='/main-etl-logs'>View ETL Log Details</Link></div>
+                    <canvas id="etl_logs__pieChart__errors_vs_success"></canvas>
                     <br />
                     <canvas id="etl_logs__barChart__activity_event_type"></canvas>
                     <br />
@@ -608,6 +743,24 @@ export class Dashboard extends React.Component
 
                 <br /><hr /><br />
 
+
+                <div className="card-header text-center">
+                    Task Logs
+                </div>
+                <div className="card-body">
+                    <div>etl_logs_section_text_html</div>
+                    <br />
+                    <div><Link to='/main-task-logs'>View Task Log Details</Link></div>
+                    <canvas id="task_logs__pieChart__errors_vs_success"></canvas> 
+                    <br />
+                    <canvas id="task_logs__barChart__activity_event_type"></canvas>
+                    <br />
+                </div>
+
+                <br /><hr /><br />
+
+
+                {/*
                 <div className="card-header text-center">
                     Server Logs
                 </div>
@@ -640,6 +793,9 @@ export class Dashboard extends React.Component
                 <div>TODO: Call and display Stats from the database  (and maybe a pie chart/d3 graph) on Each Data Type (Via Sub Modules, ETL Logs Summary) - Each Summary page should have links to the 'real' table detail page.</div><br /><br />
                 <div>TODO: Call and display Stats from the database  (and maybe a pie chart/d3 graph) on Each Data Type (Via Sub Modules, Server Logs Summary) - Each Summary page should have links to the 'real' table detail page.</div><br /><br />
                 <div>TODO: Call and display Stats on Each Data Type (Via Sub Modules, Users) - This one should link to a create user page.  (Not sure if we can get to the 'edit' user page on this run.</div><br /><br />
+                */}
+
+
             </div>
         );
         keyCounter++;

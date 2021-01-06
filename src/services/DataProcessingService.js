@@ -128,6 +128,7 @@ class DataProcessingService
     {
     	if(log_table_type == "API_Logs") 		{ return CONST__get_datatables_structure_for_logs_table(config_object.api_logs, incoming_json_data); }
     	else if(log_table_type == "ETL_Logs") 	{ return CONST__get_datatables_structure_for_logs_table(config_object.etl_logs, incoming_json_data); }
+    	else if(log_table_type == "Task_Logs") 	{ return CONST__get_datatables_structure_for_logs_table(config_object.task_logs, incoming_json_data); }
     	else if(log_table_type == "Server_Logs") { return CONST__get_datatables_structure_for_logs_table(config_object.server_logs, incoming_json_data); }
     	else if(log_table_type == "ETL_Granules") { return CONST__get_datatables_structure_for_logs_table(config_object.etl_granlues, incoming_json_data); }
     	else 								

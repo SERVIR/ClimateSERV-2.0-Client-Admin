@@ -31,7 +31,9 @@ import { APILogDetail }         from './main/api-logs/APILogDetail';
 //
 import { ServerLogs }           from './main/ServerLogs';
 import { ServerLogDetail }      from './main/server-logs/ServerLogDetail';
-
+//
+import { TaskLogs }             from './main/TaskLogs';
+import { TaskLogDetail }        from './main/task-logs/TaskLogDetail';
 
 
 
@@ -115,10 +117,13 @@ class Main extends Component
 
                     <Route path='/main-etl-logs' component={ETLLogs}/>
                     <Route path='/main-etl-log-detail' component={ETLLogDetail}/>
-                    <Route path='/main-etl-granules' component={ETLGranules}/>
+                    <Route path='/main-etl-granules' component={ETLGranules}/>       
 
                     <Route path='/main-api-logs' component={APILogs}/>
                     <Route path='/main-api-log-detail/:uuid' component={APILogDetail}/>
+
+                    <Route path='/main-task-logs' component={TaskLogs}/>
+                    <Route path='/main-task-log-detail/:uuid' component={TaskLogDetail}/>
                     
                     <Route path='/main-server-logs' component={ServerLogs}/>
                     <Route path='/main-server-log-detail' component={ServerLogDetail}/>

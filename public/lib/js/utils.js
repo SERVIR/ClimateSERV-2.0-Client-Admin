@@ -4,6 +4,7 @@
 var sid = "";
 
 
+
 // Cookie *Create and Store a Cookie:*
 function setCookie(c_name,value,exdays)
 {
@@ -86,3 +87,5 @@ function check_for_back_button()
 	
 	
 }
+
+//var is_debug_mode = false;

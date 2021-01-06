@@ -1,8 +1,8 @@
-// ETLLogs.js
+// TaskLogs.js
 
-import React from "react";
+import React from "react"; 
 import { GetObjectDetailByTypeAndUUID }   from '../../../components/reusable/GetObjectDetailByTypeAndUUID';
-import { ApiService }                     from '../../../services/ApiService';
+import { ApiService } 				      from '../../../services/ApiService';
 import { ConfigService }                  from '../../../services/ConfigService';
 import { DataProcessingService }          from '../../../services/DataProcessingService';
 
@@ -11,76 +11,69 @@ import { MDBDataTableV5 }       from 'mdbreact';
 
 // Initialize API Service
 const apiService_INSTANCE               = new ApiService();
-const configService_INSTANCE            = new ConfigService();              // let config_object = configService_INSTANCE.get_config_object();
+const configService_INSTANCE            = new ConfigService();
 const dataProcessingService_INSTANCE    = new DataProcessingService();
 
-// To Import THIS component into a parent, use: (Double Check the Directory path)
-// // //import { ETLLogs }   from '../ETLLogs'
-
 // 
-export class ETLLogs extends React.Component
+export class TaskLogs extends React.Component
 {
-    constructor(props)
+	constructor(props) 
     {
         super(props);
         this.state =
         {
-            StateVar_Placeholder: "Placeholder",
+            StateVar_Placeholder:                   "Placeholder",  
             current_AdvQueryConfig_form_html:       [], 
             current_objects_list_from_server:       [],
             objects_count:                          0,
             items_per_page:                         50,
             page_number:                            0,
-            objects_type:                           "ETL_Log",
+            objects_type:                           "Task_Log",//"API_Log",
             total_db_objects_count_for_query:       0,
             
             adv_query__last_search_string:          "",
-            //adv_query__endpoint_name_value:         "",
-            //adv_query__ip_address:                  "",
-            //adv_query__result_state_value:          "",
+            adv_query__endpoint_name_value:         "",
+            adv_query__ip_address:                  "",
+            adv_query__result_state_value:          "",
 
-            //errors_only:                            false, 
-            //success_only:                           false,
+            errors_only:                            false, 
+            success_only:                           false,
 
             adv_query_hidden:                       true,
 
             detail_view_uuid:                       "",  
 
-            //ClassName: "ETLLogs",
+            //ClassName: "TaskLogs" // "APILogs",
         };
 
-        // Example of a handler getting bound (if needed)
-        //this.handleOnRefresh = this.handleOnRefresh.bind(this);
-        //this.api__GetServerVersions();
-
         // Reference to page location for detail view
-        this.detailView_Ref = React.createRef();  // ref={this.detailView_Ref}
+        this.detailView_Ref = React.createRef(); 
 
-        // Default starter Query Settings
         let page_number = 0; 
         let items_per_page = 50; 
         let search_string = ""; //"get_server"; 
-        //let endpoint_name = "";//"/api_v2/get_server_versions/"; // ""; 
-        //let ip_address = ""; 
-        //let errors_only = false; //; true; // false; 
-        //let success_only = false;
+        let endpoint_name = "";//"/api_v2/get_server_versions/"; // ""; 
+        let ip_address = ""; 
+        let errors_only = false; //; true; // false; 
+        let success_only = false;
 
+        
         let LOCAL_IsReplace_Results = true;
-        //let LOCAL_AdvQ_ResultState_Value = "ALL"; // For the UI radio buttons only
+        let LOCAL_AdvQ_ResultState_Value = "ALL"; // For the UI radio buttons only
         /*eslint-disable */
-        //this.api__admin_get_etl_logs(LOCAL_IsReplace_Results, LOCAL_AdvQ_ResultState_Value, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
-        this.api__admin_get_etl_logs(LOCAL_IsReplace_Results, sid, page_number, items_per_page, search_string);
+        this.api__admin_get_task_logs(LOCAL_IsReplace_Results, LOCAL_AdvQ_ResultState_Value, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
         /*eslint-enable */
         
         // Have to do some weird bind thing or the strings inside of the click handler don't 'stick' (last item in the loop is the one that gets passed for all)
         this.handle_Row_Click   = this.handle_Row_Click.bind(this);
         this.handle_ID_Click    = this.handle_ID_Click.bind(this);
         
-
+        // handle_ID_Click
     }
 
     componentDidMount()
     {
+        
         let this_reference = this;
 
         // Elements to Pre-hide
@@ -92,14 +85,17 @@ export class ETLLogs extends React.Component
         }, 100);
         /*eslint-enable */
 
-        //console.log("ETLLogs.componentDidMount: Reached the end!");
+        //console.log("APILogs.componentDidMount: Reached the end!");
     }
 
-    api__admin_get_etl_logs(LOCAL_IsReplace_Results, sid, page_number, items_per_page, search_string)
+
+    // Adapted from: 	api__admin_get_api_logs
+    api__admin_get_task_logs(LOCAL_IsReplace_Results, LOCAL_AdvQ_ResultState_Value, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only)
     {
         // Call the API Service
         apiService_INSTANCE
-            .admin_get_etl_logs(sid, page_number, items_per_page, search_string)
+            //.admin_get_api_logs(sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only)
+            .admin_get_task_logs(sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only)
             .then(result => {
                 try 
                 { 
@@ -122,6 +118,10 @@ export class ETLLogs extends React.Component
                         
                         this.setState(
                         { 
+                            //JSON_Object_To_Display: result.data.object_json,
+                            //JSON_Object_UUID: result.data.object_uuid,
+                            //JSON_Object_Type: result.data.object_type
+
                             current_objects_list_from_server: combined_objects_list, //result.data.objects_list,
                             objects_count: result.data.objects_count,
                             items_per_page: result.data.items_per_page,
@@ -130,12 +130,12 @@ export class ETLLogs extends React.Component
                             total_db_objects_count_for_query: result.data.total_db_objects_count_for_query,
 
                             adv_query__last_search_string:          search_string,
-                            //adv_query__endpoint_name_value:         endpoint_name,
-                            //adv_query__ip_address:                  ip_address,
-                            //adv_query__result_state_value:          LOCAL_AdvQ_ResultState_Value,
+                            adv_query__endpoint_name_value:         endpoint_name,
+                            adv_query__ip_address:                  ip_address,
+                            adv_query__result_state_value:          LOCAL_AdvQ_ResultState_Value,
 
-                            //errors_only:    errors_only, 
-                            //success_only:   success_only,
+                            errors_only:    errors_only, 
+                            success_only:   success_only,
 
                             detail_view_uuid: detail_view_uuid,
                         }); 
@@ -143,70 +143,89 @@ export class ETLLogs extends React.Component
                     else
                     {
                         // Server Error
-                        //console.log("admin_get_etl_logs: Error: ")
+                        //console.log("api__admin_get_task_logs: Error: ")
                     }
                 } 
                 catch(err) 
                 { 
-                    //console.log("admin_get_etl_logs: Error: " + err);
+                    //console.log("api__admin_get_task_logs: Error: " + err);
                 }
-                //console.log("admin_get_etl_logs: Results (Next Line)");
-                //console.log(result);
+                console.log("api__admin_get_task_logs: Results (Next Line)");
+                console.log(result);
+                
+                //try { this.setState({ Some_State_Property: result.data, Another_State_Property: true }); } catch(err) { }
+                //console.log("FINISH DOING SOMETHING HERE!");
 
+                // Setting the global SID
+                /*eslint-disable */
+                //let current_sid = sid;
+                //sid = result.data.sid;
+                //setCookie("sid",sid,30);
+                /*eslint-enable */
 
             })
             .catch(error =>
             {
-                console.log("ETLLogs:api__admin_get_etl_logs: .catch: (error) (Next Line)");
+                console.log("TaskLogs:api__admin_get_task_logs: .catch: (error) (Next Line)");
                 console.log(error);
             });
     }
 
-    // Gets the Config object and converts results that come from the server into something that the Datatables plugin can understand and use.
+
     convert_server_results_to_data_tables_data()
     {
         // dataProcessingService_INSTANCE
-        let log_table_type = "ETL_Logs";
+        let log_table_type = "Task_Logs"; //let log_table_type = "API_Logs";
         let config_object = configService_INSTANCE.get_config_object(); //"";
         let incoming_json_data = this.state.current_objects_list_from_server;
         let datatables_data = dataProcessingService_INSTANCE.convert_server_response_to_datatables_datastructure_for_logs(log_table_type, config_object, incoming_json_data); 
         
-        //console.log("ETLGranules.convert_server_results_to_data_tables_data: (datatables_data) (Next Line)");
+        //console.log("APILogs.convert_server_results_to_data_tables_data: (datatables_data) (Next Line)");
         //console.log(datatables_data);
         
+        //return "TODO_FINISH_THIS";
         return datatables_data;
     }
 
     handle_Row_Click(uuid)
     {
         // Do we need an entire row click to do anything??
+
+        //console.log("handle_Row_Click: (uuid): " + uuid);
+        //alert("APILogs.js: handle_Row_Click: STOPPED HERE - NEED TO MAKE THIS FUNCTION TAKE YOU TO DETAIL VIEW FOR: " + uuid);
+        // http://localhost:3000/main-api-log-detail/3NcxCfDLbUCah2Yn8ykV
     }
+
 
     // When the ID is clicked on, the UUID prop is sent in (the business logic parts of the database 'speak' in UUIDs, not IDs, which are just simple primary keys)
     //handle_ID_Click(e, uuid)
     handle_ID_Click(uuid)
     {
         //console.log("handle_ID_Click: (uuid): " + uuid);
+        //alert("APILogs.js: handle_ID_Click: STOPPED HERE - NEED TO MAKE THIS FUNCTION TAKE YOU TO DETAIL VIEW FOR: " + uuid);
+        // http://localhost:3000/main-api-log-detail/3NcxCfDLbUCah2Yn8ykV
+
         this.setState({detail_view_uuid: uuid});
     }
-    
+
     get_all_remaining_results_from_server()
     {
 
         let page_number         = 0;
         let items_per_page      = this.state.total_db_objects_count_for_query; //50; 
         let search_string       = this.state.adv_query__last_search_string; // = "";
-        //let endpoint_name       = this.state.adv_query__endpoint_name_value; // = "";
-        //let ip_address          = this.state.adv_query__ip_address; // = "";
-        //let errors_only         = this.state.errors_only; // false;
-        //let success_only        = this.state.success_only; // false;
+        let endpoint_name       = this.state.adv_query__endpoint_name_value; // = "";
+        let ip_address          = this.state.adv_query__ip_address; // = "";
+        let errors_only         = this.state.errors_only; // false;
+        let success_only        = this.state.success_only; // false;
         
         let LOCAL_IsReplace_Results = true;
-        //let LOCAL_adv_query__result_state_value   = this.state.adv_query__result_state_value;
+        let LOCAL_adv_query__result_state_value   = this.state.adv_query__result_state_value;
         /*eslint-disable */
-        //this.api__admin_get_etl_logs(LOCAL_IsReplace_Results, LOCAL_adv_query__result_state_value, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
-        this.api__admin_get_etl_logs(LOCAL_IsReplace_Results, sid, page_number, items_per_page, search_string);
+        //this.api__admin_get_api_logs(LOCAL_IsReplace_Results, LOCAL_adv_query__result_state_value, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
+        this.api__admin_get_task_logs(LOCAL_IsReplace_Results, LOCAL_adv_query__result_state_value, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
         /*eslint-enable */
+        
     }
 
     get_more_results_from_server()
@@ -214,101 +233,128 @@ export class ETLLogs extends React.Component
         let page_number = (this.state.page_number * 1) + 1; 
         let items_per_page = 50; 
         let search_string       = this.state.adv_query__last_search_string; // = "";
-        //let endpoint_name       = this.state.adv_query__endpoint_name_value; // = "";
-        //let ip_address          = this.state.adv_query__ip_address; // = "";
-        //let errors_only         = this.state.errors_only; // false;
-        //let success_only        = this.state.success_only; // false;
+        let endpoint_name       = this.state.adv_query__endpoint_name_value; // = "";
+        let ip_address          = this.state.adv_query__ip_address; // = "";
+        let errors_only         = this.state.errors_only; // false;
+        let success_only        = this.state.success_only; // false;
         
         let LOCAL_IsReplace_Results = false;
-        //let LOCAL_adv_query__result_state_value   = this.state.adv_query__result_state_value;
+        let LOCAL_adv_query__result_state_value   = this.state.adv_query__result_state_value;
         /*eslint-disable */
-        //this.api__admin_get_etl_logs(LOCAL_IsReplace_Results, LOCAL_adv_query__result_state_value, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
-        this.api__admin_get_etl_logs(LOCAL_IsReplace_Results, sid, page_number, items_per_page, search_string);
+        //this.api__admin_get_api_logs(LOCAL_IsReplace_Results, LOCAL_adv_query__result_state_value, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
+        this.api__admin_get_task_logs(LOCAL_IsReplace_Results, LOCAL_adv_query__result_state_value, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
         /*eslint-enable */
+        
     }
 
     handle__RunAdvancedQuery__Click(e)
     {
+        //console.log("handle__RunAdvancedQuery__Click");
+        //Params for API Call: search_string, endpoint_name, ip_address, errors_only, success_only
+        // IDs for reading state
+        // AdvQueryConfig_input__search_string, AdvQueryConfig_input__endpoint_name, AdvQueryConfig_input__ip_address, 
+        // ResultState: AdvQueryConfig_input__radio__all, AdvQueryConfig_input__radio__errors_only, AdvQueryConfig_input__radio__successes_only
+        // // $('input[name=radioName]:checked', '#myForm').val()
+        // // $('input[name=result_state_group]:checked', '#AdvQueryConfig_Form').val()
+        
+
         var page_number = "0"
         var items_per_page = 50; 
         var search_string = "";
-        //var endpoint_name = "";
-        //var ip_address = ""; 
-        //var errors_only = false;
-        //var success_only = false;
+        var endpoint_name = "";
+        var ip_address = ""; 
+        var errors_only = false;
+        var success_only = false;
         var LOCAL_IsReplace_Results = true;
         
-        //var result_state_group_val = "";
+        var result_state_group_val = "";
         /*eslint-disable */
         // Apply Advanced Search Params
         try { search_string = $("#AdvQueryConfig_input__search_string").val();  } catch(err) {}
-        //try { endpoint_name = $("#AdvQueryConfig_input__endpoint_name").val();  } catch(err) {}
-        //try { ip_address    = $("#AdvQueryConfig_input__ip_address").val();     } catch(err) {}
-        //try 
-        //{ 
-        //    result_state_group_val    = $('input[name=result_state_group]:checked', '#AdvQueryConfig_Form').val();     
-        //    if(result_state_group_val == "ALL") {}
-        //    if(result_state_group_val == "ERRORS_ONLY")     { errors_only = true;   }
-        //    if(result_state_group_val == "SUCCESSES_ONLY")  { success_only = true;  }
-        //} catch(err) {}
+        try { endpoint_name = $("#AdvQueryConfig_input__endpoint_name").val();  } catch(err) {}
+        try { ip_address    = $("#AdvQueryConfig_input__ip_address").val();     } catch(err) {}
+        try 
+        { 
+            result_state_group_val    = $('input[name=result_state_group]:checked', '#AdvQueryConfig_Form').val();     
+            if(result_state_group_val == "ALL") {}
+            if(result_state_group_val == "ERRORS_ONLY")     { errors_only = true;   }
+            if(result_state_group_val == "SUCCESSES_ONLY")  { success_only = true;  }
+        } catch(err) {}
         
-        //this.api__admin_get_etl_logs(LOCAL_IsReplace_Results, result_state_group_val, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
-        this.api__admin_get_etl_logs(LOCAL_IsReplace_Results, sid, page_number, items_per_page, search_string);
+        //this.api__admin_get_api_logs(LOCAL_IsReplace_Results, result_state_group_val, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
+        this.api__admin_get_task_logs(LOCAL_IsReplace_Results, result_state_group_val, sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only);
         /*eslint-enable */
+
     }
 
-    // // Quick Queries Button Handlers
-    // quick_query__Errors_Only__Click(e)
-    // {
-    //     // ERRORS_ONLY
-    //     /*eslint-disable */
-    //     $("#AdvQueryConfig_input__search_string").val("");
-    //     $("#AdvQueryConfig_input__endpoint_name").val("");
-    //     $("#AdvQueryConfig_input__ip_address").val(""); 
-    //     $('#AdvQueryConfig_input__radio__errors_only:first').attr('checked', 'checked');
-    //     /*eslint-enable */
-    //     this.handle__RunAdvancedQuery__Click(e);    
-    // }
+    // Quick Queries Button Handlers
+    quick_query__Errors_Only__Click(e)
+    {
+        // ERRORS_ONLY
+        /*eslint-disable */
+        $("#AdvQueryConfig_input__search_string").val("");
+        $("#AdvQueryConfig_input__endpoint_name").val("");
+        $("#AdvQueryConfig_input__ip_address").val(""); 
+        $('#AdvQueryConfig_input__radio__errors_only:first').attr('checked', 'checked');
+        /*eslint-enable */
+        this.handle__RunAdvancedQuery__Click(e);    
+    }
     
-    // quick_query__Success_Only__Click(e)
-    // {
-    //     // SUCCESSES_ONLY
-    //     /*eslint-disable */
-    //     $("#AdvQueryConfig_input__search_string").val("");
-    //     $("#AdvQueryConfig_input__endpoint_name").val("");
-    //     $("#AdvQueryConfig_input__ip_address").val(""); 
-    //     $('#AdvQueryConfig_input__radio__successes_only:first').attr('checked', 'checked'); 
-    //     /*eslint-enable */
-    //     this.handle__RunAdvancedQuery__Click(e);    
-    // }
+    quick_query__Success_Only__Click(e)
+    {
+        // SUCCESSES_ONLY
+        /*eslint-disable */
+        $("#AdvQueryConfig_input__search_string").val("");
+        $("#AdvQueryConfig_input__endpoint_name").val("");
+        $("#AdvQueryConfig_input__ip_address").val(""); 
+        $('#AdvQueryConfig_input__radio__successes_only:first').attr('checked', 'checked'); 
+        /*eslint-enable */
+        this.handle__RunAdvancedQuery__Click(e);    
+    }
 
-    // Definition of the Advanced Query Form
+
+    // 
     get_AdvQueryConfig_form_html()
     {
+
+        // Note: React caused problems when trying to set the values of the input.  It rendered the Input form almost useless (could not edit, and then when following "best" practices, it would re-render the form after each character chage making it non-funcitonal)
+        // Using JQuery to set the form state AFTER a load (by reading from the react state)
+        //
+        // I only want the react state to change under certain conditions - jquery is managing the 'local' components in such a way that react does not even need to know about them.
+
+
         // Read existing state
         let adv_query__last_search_string   = this.state.adv_query__last_search_string;
-        //let adv_query__endpoint_name_value  = this.state.adv_query__endpoint_name_value;
-        //let adv_query__ip_address           = this.state.adv_query__ip_address;
-        //let adv_query__result_state_value   = this.state.adv_query__result_state_value;
+        let adv_query__endpoint_name_value  = this.state.adv_query__endpoint_name_value;
+        let adv_query__ip_address           = this.state.adv_query__ip_address;
+        let adv_query__result_state_value   = this.state.adv_query__result_state_value;
+        //
+        // let COPY_OF_STATE = Object.assign({}, this.state);
+        // let adv_query__last_search_string   = COPY_OF_STATE.adv_query__last_search_string;
+        // let adv_query__endpoint_name_value  = COPY_OF_STATE.adv_query__endpoint_name_value;
+        // let adv_query__ip_address           = COPY_OF_STATE.adv_query__ip_address;
+        // let adv_query__result_state_value   = COPY_OF_STATE.adv_query__result_state_value;
 
         // Resetting form state manually (via jquery - after render)
         setTimeout(function()
         { 
             /*eslint-disable */
             try { $("#AdvQueryConfig_input__search_string").val(adv_query__last_search_string);     } catch(err) {}
-            //try { $("#AdvQueryConfig_input__endpoint_name").val(adv_query__endpoint_name_value);    } catch(err) {}
-            //try { $("#AdvQueryConfig_input__ip_address").val(adv_query__ip_address);                } catch(err) {}
-            //try 
-            //{ 
-            //    let result_state_group_val    = adv_query__result_state_value; //$('input[name=result_state_group]:checked', '#AdvQueryConfig_Form').val();     
-            //    if(result_state_group_val == "")                { $('#AdvQueryConfig_input__radio__all:first').attr('checked', 'checked'); }
-            //    if(result_state_group_val == "ALL")             { $('#AdvQueryConfig_input__radio__all:first').attr('checked', 'checked'); }
-            //    if(result_state_group_val == "ERRORS_ONLY")     { $('#AdvQueryConfig_input__radio__errors_only:first').attr('checked', 'checked'); }
-            //    if(result_state_group_val == "SUCCESSES_ONLY")  { $('#AdvQueryConfig_input__radio__successes_only:first').attr('checked', 'checked'); }
-            //} catch(err) {}
+            try { $("#AdvQueryConfig_input__endpoint_name").val(adv_query__endpoint_name_value);    } catch(err) {}
+            try { $("#AdvQueryConfig_input__ip_address").val(adv_query__ip_address);                } catch(err) {}
+            try 
+            { 
+                let result_state_group_val    = adv_query__result_state_value; //$('input[name=result_state_group]:checked', '#AdvQueryConfig_Form').val();     
+                if(result_state_group_val == "")                { $('#AdvQueryConfig_input__radio__all:first').attr('checked', 'checked'); }
+                if(result_state_group_val == "ALL")             { $('#AdvQueryConfig_input__radio__all:first').attr('checked', 'checked'); }
+                if(result_state_group_val == "ERRORS_ONLY")     { $('#AdvQueryConfig_input__radio__errors_only:first').attr('checked', 'checked'); }
+                if(result_state_group_val == "SUCCESSES_ONLY")  { $('#AdvQueryConfig_input__radio__successes_only:first').attr('checked', 'checked'); }
+            } catch(err) {}
             /*eslint-enable */
         }, 100);
 
+
+        // htmlFor="AdvQueryConfig_input__radio__errors_only" 
         var key_counter_internal = Math.floor(Math.random() * 900000);
         var AdvQueryConfig_HTML = [];
         AdvQueryConfig_HTML.push(
@@ -322,7 +368,6 @@ export class ETLLogs extends React.Component
                             <input type="text" className="form-control" id="AdvQueryConfig_input__search_string" placeholder="(Optional) Search Term" ></input>
                         </div>
 
-                    { /*
                         <div className="form-group">
                             <label htmlFor="AdvQueryConfig_input__endpoint_name">Limit by Endpoint</label>
                             <input type="text" className="form-control" id="AdvQueryConfig_input__endpoint_name" placeholder="(Optional) Endpoint Path" ></input>
@@ -349,7 +394,7 @@ export class ETLLogs extends React.Component
                             <input type="radio" id="AdvQueryConfig_input__radio__successes_only" name="result_state_group" className="custom-control-input" value="SUCCESSES_ONLY" />
                             <label className="custom-control-label" for="AdvQueryConfig_input__radio__successes_only">Only Return Successes</label>
                         </div>
-                    */ }
+
 
                       <br />
                       
@@ -363,11 +408,11 @@ export class ETLLogs extends React.Component
         )
         return AdvQueryConfig_HTML;
     }
-
-    // When an ID is clicked, and the detail view is rendered, this function scrolls the user to that point in the page.
+    
     scroll_to_DetailView()
     {
         let topPaddingScroll_Amount = 50; //20;
+        //window.scrollTo(0, (this.detailView_Ref.current.offsetTop - topPaddingScroll_Amount), 'smooth' ); // 'smooth' is for animation.
         window.scrollTo(
         {
             left:0, 
@@ -376,9 +421,57 @@ export class ETLLogs extends React.Component
         }); // 'smooth' is for animation.
     }
 
+
+    // let detail_view_HTML = this.get_DetailView_HTML();  // APILogDetail, this.state.detail_view_uuid
+    get_DetailView_HTML()
+    {
+        // Has a record {detail_view_uuid}
+        // { /* <APILogDetail key={key_counter_internal + 1} /> */ }
+
+        let this_ref = this;
+
+        var key_counter_internal = Math.floor(Math.random() * 900000);
+        var detailView_HTML = [];
+
+        let detail_view_uuid = this.state.detail_view_uuid;
+        
+        if(detail_view_uuid !== "")
+        {
+            let object_type = "TaskLog"; //let object_type = "APILog";
+            let object_uuid = detail_view_uuid;
+
+            detailView_HTML.push(
+                <div key={key_counter_internal} ref={this.detailView_Ref}>
+                    Detail View:
+                    <GetObjectDetailByTypeAndUUID object_type={object_type} object_uuid={object_uuid} />
+                </div>
+            );
+
+            // Scroll to Detail View
+            setTimeout(function(){ this_ref.scroll_to_DetailView(); }, 50); 
+            
+        }
+        else
+        {
+            detailView_HTML.push(
+                <div key={key_counter_internal}>
+                </div>
+            );
+        }
+
+        
+
+        return detailView_HTML;
+        // { /* <a a={a} /> */ }  // Note: Something is wrong with my IDE and lines like this fix the syntax highlighting...
+    }
+
     // Click the right arrow to expand a section, or the down arrow to collapse a section.
     toggle_section_expand(e, controller_element_id, target_element_id, animation_time)
     {
+        //console.log("toggle_section_expand");
+        //console.log("controller_element_id: " + controller_element_id);
+        //console.log("target_element_id: " + target_element_id);
+
         var controller_element_selector_string          = "#" + controller_element_id;
         var controller_element_icon_selector_string     = controller_element_selector_string + ">i"
         var target_element_selector_string              = "#" + target_element_id;
@@ -398,10 +491,11 @@ export class ETLLogs extends React.Component
             $(target_element_selector_string).hide(animation_time);
             $(controller_element_icon_selector_string).removeClass( class_for_ToCollapse ).addClass( class_for_ToExpand );
         }
-        /*eslint-enable */   
-    }
-    
+        /*eslint-enable */
 
+        //console.log("is_target_hidden: " + is_target_hidden);
+        
+    }
 
     render()
     {
@@ -412,23 +506,29 @@ export class ETLLogs extends React.Component
         setTimeout(function(){ check_for_back_button(); }, 50);
         /*eslint-enable */ 
 
-        // Prep Data from the server for the Data Tables plugin, Get HTML for certain sub sections.
-        let raw_datatables_data         = this.convert_server_results_to_data_tables_data();
-        let updated_datatables_data     = this.add_click_event_handlers_to_all_rows(raw_datatables_data);
-        let server_controls_HTML        = this.get_server_controls_html();
-        let AdvQueryConfig_HTML         = this.get_AdvQueryConfig_form_html();
-        let num_of_loaded_results       = this.state.current_objects_list_from_server.length;
-        let detail_view_HTML            = this.get_DetailView_HTML();  // this.state.detail_view_uuid
+        //let some_temp_data = this.convert_server_results_to_data_tables_data();
+        let raw_datatables_data = this.convert_server_results_to_data_tables_data();   // raw_datatables_data.columns, raw_datatables_data.rows, 
+        // Add Click Event Handler to each Row (using the UUID)
+        let updated_datatables_data =this.add_click_event_handlers_to_all_rows(raw_datatables_data);
+        
+
+        let server_controls_HTML = this.get_server_controls_html();
+
+
+        let AdvQueryConfig_HTML = this.get_AdvQueryConfig_form_html();
+        
+        let num_of_loaded_results = this.state.current_objects_list_from_server.length;
+
+        let detail_view_HTML = this.get_DetailView_HTML();  // APILogDetail, this.state.detail_view_uuid
 
         let renderHTML = [];
         let keyCounter = 0;
 
         renderHTML.push(
-            <div key={keyCounter} >
-                <div className="page_title_container_generic"><h3>ETL Logs</h3></div>
+            <div key={keyCounter}>
+                <div className="page_title_container_generic"><h3>Task Logs</h3></div>
                 <br />
                 
-
                 {/*
                 <div className="query_instructions">Instructions: Perform a specific, server-fiiltered query by expanding the 'advanced query' area and filling out the form.  Alternatively, click a quick filter to auto-fill and execute for common queries.  Once the query is configured, you can start using the table to further filter local results.  If you wish to load all results from the server, a button for that will be visible if there are any remaining results to load.  Click the ID of a row to see detail view for any given record.</div>
                 <br />
@@ -437,11 +537,12 @@ export class ETLLogs extends React.Component
                 &nbsp;&nbsp;|&nbsp;&nbsp;
                 <button type="button" className="btn btn-info" onClick={(e) => this.quick_query__Success_Only__Click(e)}>Success Only</button> 
                 <br /><br />
-                */}
-                
+            	
                 <div id="AdvQueryConfig_expander" onClick={(e) => this.toggle_section_expand(e, 'AdvQueryConfig_expander', 'AdvQueryConfig', 200)}><i className="fas fa-angle-down"></i>&nbsp;&nbsp;&nbsp;Advanced Query Configuration</div>
                 <div id="AdvQueryConfig">{AdvQueryConfig_HTML}</div>
+				*/}
 
+                
                 <br /><br />
                 {server_controls_HTML}
                 <br /><hr /><br />
@@ -459,53 +560,19 @@ export class ETLLogs extends React.Component
                         data={updated_datatables_data} />
                 </div>
                 <br /><hr /><br />
+                {/*[Embedded Detail View with (X) button to close the result] */ }
                 {detail_view_HTML}
-
             </div>
         );
         keyCounter++;
 
-        // { /* <a a={a} /> */ }  // Note: Something is wrong with my IDE and lines like this fix the syntax highlighting...
         return (
             <div>
                 {renderHTML}
             </div>
         );
         // { /* <a a={a} /> */ }  // Note: Something is wrong with my IDE and lines like this fix the syntax highlighting...
-    }
 
-    // let detail_view_HTML = this.get_DetailView_HTML();  // this.state.detail_view_uuid
-    get_DetailView_HTML()
-    {
-        // Has a record {detail_view_uuid}
-        // { /* <a a={a} /> */ }  // Note: Something is wrong with my IDE and lines like this fix the syntax highlighting...
-
-        let this_ref = this;
-        var key_counter_internal = Math.floor(Math.random() * 900000);
-        var detailView_HTML = [];
-        let detail_view_uuid = this.state.detail_view_uuid;
-        if(detail_view_uuid != "")
-        {
-            let object_type = "ETLLog";
-            let object_uuid = detail_view_uuid;
-            detailView_HTML.push(
-                <div key={key_counter_internal} ref={this.detailView_Ref}>
-                    Detail View:
-                    <GetObjectDetailByTypeAndUUID object_type={object_type} object_uuid={object_uuid} />
-                </div>
-            );
-            // Scroll to Detail View
-            setTimeout(function(){ this_ref.scroll_to_DetailView(); }, 50); 
-        }
-        else
-        {
-            detailView_HTML.push(
-                <div key={key_counter_internal}>
-                </div>
-            );
-        }
-        return detailView_HTML;
-        // { /* <a a={a} /> */ }  // Note: Something is wrong with my IDE and lines like this fix the syntax highlighting...
     }
 
     // Gets the HTML for displaying how many results are loaded, and if the buttons for loading more should be shown or not.
@@ -513,7 +580,9 @@ export class ETLLogs extends React.Component
     {
         var key_counter_internal = Math.floor(Math.random() * 900000);
         var server_controls_HTML = [];
+
         var remaining_items_count = (this.state.total_db_objects_count_for_query - this.state.current_objects_list_from_server.length); //objects_count);
+
         if(remaining_items_count < 1)
         {
             server_controls_HTML.push(
@@ -532,31 +601,43 @@ export class ETLLogs extends React.Component
                     <br />
                     <br />
                     <div className="btn btn-primary" onClick={(e) => this.get_all_remaining_results_from_server(e)}>Load All Remaining Results ({remaining_items_count})</div>
-                    <div className="query_instructions">(Not Recommended)</div>                    
+                    <div className="query_instructions">(Not Recommended)</div>
+
+                    
                 </div>
             );
         }
-        // { /* <a a={a} /> */ }  // Note: Something is wrong with my IDE and lines like this fix the syntax highlighting...
+
         return server_controls_HTML;
+
+
     }
 
-    // The Data Prep for datatables is processed in another place and does not contain any linkage logic.  
-    // // It is significantly simpler to intercept the raw_data and just inject click handlers right here than it would be to pass dynamic '.bind' handlers to the data processing service.
-    // // Think of it as a pipeline, and this is one of the last steps on the pipeline before the data reaches it's destination.
-    // raw_datatables_data.columns, raw_datatables_data.rows,
+    // raw_datatables_data.columns, raw_datatables_data.rows, 
     add_click_event_handlers_to_all_rows(raw_datatables_data)
     {
         let new_datatables_data = {};
         new_datatables_data.columns = raw_datatables_data.columns;
+
         var table_key_counter = 10000;
+
         var new_rows = [];
         for(var i=0; i<raw_datatables_data.rows.length; i++)
         {
             var current_row = raw_datatables_data.rows[i];
+            
+            //console.log(current_row.uuid);
             var current_row_uuid = current_row.uuid;
-            current_row.clickEvent = this.handle_Row_Click.bind(this, current_row_uuid);
+            //current_row.clickEvent = () => this.handle_Row_Click(current_row_uuid); // this.handle_Row_Click("abcd"); //this.handleClick(id);
+            current_row.clickEvent = this.handle_Row_Click.bind(this, current_row_uuid); // this.handle_Row_Click("abcd"); //this.handleClick(id);
 
-            // Modify this row to have the IDs display a little differently (and be linked up to the click handler).
+            // Modify this row to have the IDs display a little differently
+            //current_row.uuid = [<i key="cell1" className="far fa-gem mr-2 grey-text" aria-hidden="true"></i>, current_row.uuid]; //'Cell1']; // current_row.uuid
+
+            // Modify this row to have the ID column to have a bootstrap button hooked up to a click event handler and appear as a link.
+            // Click Example // <div onClick={(e) => this.handle__SomeFunction__Click(e)}>
+            // // This next line does not work, because it needs the bind thing.  (Only the very last uuid gets passed into ALL functions)
+            //var current_row_id_click_handler_HTML = [<div key={table_key_counter} onClick={(e) => this.handle_ID_Click(e, current_row.uuid)}>{current_row.id}</div>];
             var current_row_id = current_row.id;
             var current_row_id_click_handler_HTML = 
             [
@@ -566,13 +647,20 @@ export class ETLLogs extends React.Component
                         {current_row_id}
                 </div>
             ]; 
-            // { /* <a a={a} /> */ }  // Note: Something is wrong with my IDE and lines like this fix the syntax highlighting...
             current_row.id = current_row_id_click_handler_HTML; 
+
             new_rows.push(current_row);
             table_key_counter = table_key_counter + 1;
+
         }
+        
+        //console.log("add_click_event_handlers_to_all_rows: new_rows");
+        //console.log(new_rows);
+
         new_datatables_data.rows = new_rows;
+
         return new_datatables_data;
     }
+
 
 }

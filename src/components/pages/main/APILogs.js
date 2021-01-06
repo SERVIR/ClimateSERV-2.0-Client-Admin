@@ -529,19 +529,19 @@ export class APILogs extends React.Component
 
         let server_controls_HTML = this.get_server_controls_html();
 
-        console.log("");
-        console.log("APILogs.js: TODO - TODO - IMPORTANT - NEXT UP");
-        console.log("APILogs.js: TODO - TODO - IMPORTANT - NEXT UP");
-        console.log("APILogs.js: TODO - TODO - IMPORTANT - NEXT UP");
-        console.log("");
-        //console.log("-Build the form (with all the proper query options)");
-        //console.log("--Make sure the form is expand/collapsable via local show/hide animated jquery functions");
-        //console.log("-Create an 'execute_advanced_query' function which just jquery reads the form and then calls the api (and replaces the existing local data)");
-        //console.log("-Build the custom clickable links (that auto fill the form and then perform the 'execute_advanced_query' function");
-        //console.log("-Expand this pattern to ETL and ServerLogs files");
-        //console.log("-Create ETL Granules File which also follows this same pattern");
-        console.log("-GET STATS WORKING (Dashboard page AND serverside requests) - SEE THAT ONE COOL ADMIN DASHBOARD TEMPLATE WITH ALL THE CHARTS");
-        console.log("");
+        // console.log("");
+        // console.log("APILogs.js: TODO - TODO - IMPORTANT - NEXT UP");
+        // console.log("APILogs.js: TODO - TODO - IMPORTANT - NEXT UP");
+        // console.log("APILogs.js: TODO - TODO - IMPORTANT - NEXT UP");
+        // console.log("");
+        // //console.log("-Build the form (with all the proper query options)");
+        // //console.log("--Make sure the form is expand/collapsable via local show/hide animated jquery functions");
+        // //console.log("-Create an 'execute_advanced_query' function which just jquery reads the form and then calls the api (and replaces the existing local data)");
+        // //console.log("-Build the custom clickable links (that auto fill the form and then perform the 'execute_advanced_query' function");
+        // //console.log("-Expand this pattern to ETL and ServerLogs files");
+        // //console.log("-Create ETL Granules File which also follows this same pattern");
+        // console.log("-GET STATS WORKING (Dashboard page AND serverside requests) - SEE THAT ONE COOL ADMIN DASHBOARD TEMPLATE WITH ALL THE CHARTS");
+        // console.log("");
 
 
         let AdvQueryConfig_HTML = this.get_AdvQueryConfig_form_html();

@@ -90,8 +90,9 @@ class Home extends Component
                         <li><Link to='/main-dashboard'>Dashboard</Link></li>
                         <li><Link to='/main-api-logs'>API Logs</Link></li>
                         <li><Link to='/main-etl-logs'>ETL Logs</Link></li>
-                        <li><Link to='/main-etl-granules'>ETL Granules</Link></li>
-                        <li><Link to='/main-server-logs'>Server Logs</Link></li>
+                        <li><Link to='/main-task-logs'>Task Logs</Link></li>
+                        {/*     <li><Link to='/main-etl-granules'>ETL Granules</Link></li>      */}
+                        {/*     <li><Link to='/main-server-logs'>Server Logs</Link></li>        */}
                     </ul>
                     <br />
                     <ul>

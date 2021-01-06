@@ -6,7 +6,12 @@
 import axios from 'axios';
 
 //const ROOT_API_URL                          = '/api_v2/';
-const ROOT_API_URL                 		= 'http://127.0.0.1:8234/api_v2/';
+
+const ROOT_API_URL                        = 'http://127.0.0.1:8234/api_v2/';
+// LOCAL_DEV // const ROOT_API_URL                 		= 'http://127.0.0.1:8234/api_v2/';
+// PRODUCTION // const ROOT_API_URL                      = 'https://climateserv2-beta-server.servirglobal.net/api_v2/';
+
+
 //const ROOT_API_URL__LOCALHOST          	  	= 'http://127.0.0.1:8234/api_v2/';
 //
 const ENDPOINT__GET_SERVER_VERSION      = 'get_server_versions/';
@@ -19,6 +24,7 @@ const ENDPOINT__admin_create_user           = 'admin_create_user/';
 const ENDPOINT__admin_get_db_item           = 'admin_get_db_item/';         // Applies to many DB types
 //
 const ENDPOINT__admin_get_api_logs          = 'admin_get_api_logs/';
+const ENDPOINT__admin_get_task_logs         = 'admin_get_task_logs/';
 const ENDPOINT__admin_get_etl_logs          = 'admin_get_etl_logs/';
 const ENDPOINT__admin_get_server_logs       = 'admin_get_server_logs/';
 const ENDPOINT__admin_get_stats_for_type    = 'admin_get_stats_for_type/';  // Applies to many DB types
@@ -145,6 +151,25 @@ const CONST__admin_get_api_logs = (sid, page_number, items_per_page, search_stri
     });
 };
 
+//const CONST__admin_get_task_logs = (sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only) =>
+const CONST__admin_get_task_logs = (sid, page_number, items_per_page, search_string) =>
+{
+    let requestURL = ROOT_API_URL + ENDPOINT__admin_get_task_logs;
+    return new Promise((resolve, reject) =>
+    {
+        //axios(  { method:     'post',     url:        requestURL,     data: { session_info: sid, page_number: page_number, items_per_page: items_per_page, search_string: search_string, endpoint_name: endpoint_name, ip_address: ip_address, errors_only: errors_only, success_only: success_only } })
+        axios(  { method:     'post',     url:        requestURL,     data: { session_info: sid, page_number: page_number, items_per_page: items_per_page, search_string: search_string } })
+        .then(response =>
+        {
+            /*console.log("ApiService.CONST__admin_get_task_logs: .then (response) (on next line)");*//*console.log(response);*/
+            if (response && response.status === 200)    {   resolve(response);  }
+            else                                        {   reject('(CONST__admin_get_task_logs) Something broke...');   }
+        }).catch(error => reject(error.message));
+    });
+};
+
+
+
 const CONST__admin_get_etl_logs = (sid, page_number, items_per_page, search_string) =>
 {
     let requestURL = ROOT_API_URL + ENDPOINT__admin_get_etl_logs;
@@ -227,6 +252,8 @@ class ApiService
     admin_get_db_item(sid, object_uuid, object_type)        { return CONST__admin_get_db_item(sid, object_uuid, object_type); }
     //
     admin_get_api_logs(sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only)           { return CONST__admin_get_api_logs(sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only); }
+    //admin_get_task_logs(sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only)          { return CONST__admin_get_task_logs(sid, page_number, items_per_page, search_string, endpoint_name, ip_address, errors_only, success_only); }
+    admin_get_task_logs(sid, page_number, items_per_page, search_string)                                                                 { return CONST__admin_get_task_logs(sid, page_number, items_per_page, search_string); }
     admin_get_etl_logs(sid, page_number, items_per_page, search_string)                                                                 { return CONST__admin_get_etl_logs(sid, page_number, items_per_page, search_string); }
     admin_get_server_logs(sid, page_number, items_per_page, search_string)                                                              { return CONST__admin_get_server_logs(sid, page_number, items_per_page, search_string); }
     // TODO: admin_get_etl_granules (close to the way the above ones are done.)
